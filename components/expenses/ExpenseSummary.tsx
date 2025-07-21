@@ -1,4 +1,6 @@
 import { Expense, ExpensePayment } from '@/lib/types'
+import { Card, CardContent, Typography, Box, Grid, Alert } from '@mui/material'
+import { AttachMoney, CheckCircle, Schedule, Person, AccountBalance, CreditCard } from '@mui/icons-material'
 
 interface ExpenseSummaryProps {
   expenses: Expense[]
@@ -23,65 +25,112 @@ export default function ExpenseSummary({ expenses, payments, currentUserId }: Ex
     }, 0)
 
   return (
-    <div className="bg-white rounded-lg shadow border p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Expense Summary</h3>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="text-center p-4 bg-blue-50 rounded-lg">
-          <div className="text-2xl font-bold text-blue-600">${totalExpenses.toFixed(2)}</div>
-          <div className="text-sm text-blue-600">Total Expenses</div>
-        </div>
+    <Card>
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
+          <AttachMoney sx={{ color: 'primary.main' }} />
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Expense Summary
+          </Typography>
+        </Box>
         
-        <div className="text-center p-4 bg-green-50 rounded-lg">
-          <div className="text-2xl font-bold text-green-600">${totalPaid.toFixed(2)}</div>
-          <div className="text-sm text-green-600">Settled</div>
-        </div>
-        
-        <div className="text-center p-4 bg-yellow-50 rounded-lg">
-          <div className="text-2xl font-bold text-yellow-600">${totalOutstanding.toFixed(2)}</div>
-          <div className="text-sm text-yellow-600">Outstanding</div>
-        </div>
-        
-        {currentUserId && (
-          <div className="text-center p-4 bg-purple-50 rounded-lg">
-            <div className="text-2xl font-bold text-purple-600">${userShare.toFixed(2)}</div>
-            <div className="text-sm text-purple-600">Your Share</div>
-          </div>
-        )}
-      </div>
-
-      {currentUserId && (
-        <div className="mt-6 pt-4 border-t border-gray-100">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">You Paid</h4>
-              <div className="text-lg font-semibold text-green-600">${userPaidAmount.toFixed(2)}</div>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Your Total Share</h4>
-              <div className="text-lg font-semibold text-blue-600">${userShare.toFixed(2)}</div>
-            </div>
-          </div>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6} lg={3}>
+            <Card sx={{ textAlign: 'center', p: 2, bgcolor: 'primary.50' }}>
+              <AttachMoney sx={{ fontSize: 32, color: 'primary.main', mb: 1 }} />
+              <Typography variant="h5" sx={{ fontWeight: 700, color: 'primary.main' }}>
+                ${totalExpenses.toFixed(2)}
+              </Typography>
+              <Typography variant="body2" color="primary.main">
+                Total Expenses
+              </Typography>
+            </Card>
+          </Grid>
           
-          <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-600">
-              {userPaidAmount > userShare ? (
-                <span className="text-green-600 font-medium">
-                  ✅ You&apos;re owed ${(userPaidAmount - userShare).toFixed(2)}
-                </span>
-              ) : userPaidAmount < userShare ? (
-                <span className="text-red-600 font-medium">
-                  💳 You owe ${(userShare - userPaidAmount).toFixed(2)}
-                </span>
-              ) : (
-                <span className="text-gray-600 font-medium">
-                  ⚖️ You&apos;re all settled up
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+          <Grid item xs={12} sm={6} lg={3}>
+            <Card sx={{ textAlign: 'center', p: 2, bgcolor: 'success.50' }}>
+              <CheckCircle sx={{ fontSize: 32, color: 'success.main', mb: 1 }} />
+              <Typography variant="h5" sx={{ fontWeight: 700, color: 'success.main' }}>
+                ${totalPaid.toFixed(2)}
+              </Typography>
+              <Typography variant="body2" color="success.main">
+                Settled
+              </Typography>
+            </Card>
+          </Grid>
+          
+          <Grid item xs={12} sm={6} lg={3}>
+            <Card sx={{ textAlign: 'center', p: 2, bgcolor: 'warning.50' }}>
+              <Schedule sx={{ fontSize: 32, color: 'warning.main', mb: 1 }} />
+              <Typography variant="h5" sx={{ fontWeight: 700, color: 'warning.main' }}>
+                ${totalOutstanding.toFixed(2)}
+              </Typography>
+              <Typography variant="body2" color="warning.main">
+                Outstanding
+              </Typography>
+            </Card>
+          </Grid>
+          
+          {currentUserId && (
+            <Grid item xs={12} sm={6} lg={3}>
+              <Card sx={{ textAlign: 'center', p: 2, bgcolor: 'secondary.50' }}>
+                <Person sx={{ fontSize: 32, color: 'secondary.main', mb: 1 }} />
+                <Typography variant="h5" sx={{ fontWeight: 700, color: 'secondary.main' }}>
+                  ${userShare.toFixed(2)}
+                </Typography>
+                <Typography variant="body2" color="secondary.main">
+                  Your Share
+                </Typography>
+              </Card>
+            </Grid>
+          )}
+        </Grid>
+
+        {currentUserId && (
+          <Box sx={{ mt: 4, pt: 3, borderTop: 1, borderColor: 'divider' }}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <CreditCard sx={{ fontSize: 20, color: 'text.secondary' }} />
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                    You Paid
+                  </Typography>
+                </Box>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: 'success.main' }}>
+                  ${userPaidAmount.toFixed(2)}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <AccountBalance sx={{ fontSize: 20, color: 'text.secondary' }} />
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                    Your Total Share
+                  </Typography>
+                </Box>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.main' }}>
+                  ${userShare.toFixed(2)}
+                </Typography>
+              </Grid>
+            </Grid>
+            
+            <Alert
+              severity={userPaidAmount > userShare ? 'success' : userPaidAmount < userShare ? 'warning' : 'info'}
+              icon={userPaidAmount > userShare ? <CheckCircle /> : userPaidAmount < userShare ? <CreditCard /> : <AccountBalance />}
+              sx={{ mt: 2 }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                {userPaidAmount > userShare ? (
+                  `You're owed $${(userPaidAmount - userShare).toFixed(2)}`
+                ) : userPaidAmount < userShare ? (
+                  `You owe $${(userShare - userPaidAmount).toFixed(2)}`
+                ) : (
+                  'You\'re all settled up'
+                )}
+              </Typography>
+            </Alert>
+          </Box>
+        )}
+      </CardContent>
+    </Card>
   )
 }

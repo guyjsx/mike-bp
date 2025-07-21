@@ -1,5 +1,7 @@
 import { getAuthSession } from '@/lib/auth'
 import { createClient } from '@/lib/supabase/server'
+import { Typography, Box, Grid, Card, CardContent, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import { Phone, Directions } from '@mui/icons-material'
 import CountdownTimer from '@/components/dashboard/CountdownTimer'
 import QuickStats from '@/components/dashboard/QuickStats'
 import AnnouncementBanner from '@/components/dashboard/AnnouncementBanner'
@@ -52,10 +54,10 @@ export default async function DashboardPage() {
     : null
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <Typography variant="h3" component="h1" sx={{ fontWeight: 700, color: 'text.primary' }}>
         Welcome{session?.attendeeName ? `, ${session.attendeeName}` : ''}!
-      </h1>
+      </Typography>
 
       {announcements && announcements.length > 0 && (
         <AnnouncementBanner announcements={announcements} />
@@ -72,34 +74,72 @@ export default async function DashboardPage() {
         } : undefined}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <UpcomingEvents 
-          events={events || []} 
-          attendeeId={session?.attendeeId}
-        />
+      <Grid container spacing={3}>
+        <Grid item xs={12} lg={6}>
+          <UpcomingEvents 
+            events={events || []} 
+            attendeeId={session?.attendeeId}
+          />
+        </Grid>
         
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-          <div className="space-y-2">
-            <a
-              href={`tel:${process.env.NEXT_PUBLIC_HOTEL_PHONE || '(812) 969-5000'}`}
-              className="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              <span className="text-lg mr-2">📞</span>
-              <span className="font-medium">Call Hotel</span>
-            </a>
-            <a
-              href={process.env.NEXT_PUBLIC_HOTEL_MAP_LINK || 'https://maps.google.com'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              <span className="text-lg mr-2">🗺️</span>
-              <span className="font-medium">Hotel Directions</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+        <Grid item xs={12} lg={6}>
+          <Card>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+                Quick Links
+              </Typography>
+              <List sx={{ p: 0 }}>
+                <ListItem
+                  component="a"
+                  href={`tel:${process.env.NEXT_PUBLIC_HOTEL_PHONE || '(812) 969-5000'}`}
+                  sx={{
+                    bgcolor: 'grey.50',
+                    borderRadius: 2,
+                    mb: 1,
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    '&:hover': {
+                      bgcolor: 'grey.100'
+                    }
+                  }}
+                >
+                  <ListItemIcon>
+                    <Phone color="primary" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary="Call Hotel" 
+                    primaryTypographyProps={{ fontWeight: 600 }}
+                  />
+                </ListItem>
+                
+                <ListItem
+                  component="a"
+                  href={process.env.NEXT_PUBLIC_HOTEL_MAP_LINK || 'https://maps.google.com'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    bgcolor: 'grey.50',
+                    borderRadius: 2,
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    '&:hover': {
+                      bgcolor: 'grey.100'
+                    }
+                  }}
+                >
+                  <ListItemIcon>
+                    <Directions color="primary" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary="Hotel Directions" 
+                    primaryTypographyProps={{ fontWeight: 600 }}
+                  />
+                </ListItem>
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Box>
   )
 }

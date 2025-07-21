@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Tabs, Tab, Chip, Box } from '@mui/material'
 
 interface DayTabsProps {
   selectedDay: string
@@ -15,40 +16,64 @@ export default function DayTabs({ selectedDay, onDayChange, eventCounts }: DayTa
     { value: '2024-05-12', label: 'Sunday', shortLabel: 'Sun' },
   ]
 
+  const selectedIndex = days.findIndex(day => day.value === selectedDay)
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    onDayChange(days[newValue].value)
+  }
+
   return (
-    <div className="border-b border-gray-200">
-      <nav className="-mb-px flex space-x-8" aria-label="Days">
-        {days.map((day) => {
-          const isSelected = selectedDay === day.value
+    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Tabs
+        value={selectedIndex >= 0 ? selectedIndex : 0}
+        onChange={handleChange}
+        variant="fullWidth"
+        sx={{
+          '& .MuiTabs-indicator': {
+            backgroundColor: 'primary.main',
+            height: 3
+          }
+        }}
+      >
+        {days.map((day, index) => {
           const count = eventCounts[day.value] || 0
           
           return (
-            <button
+            <Tab
               key={day.value}
-              onClick={() => onDayChange(day.value)}
-              className={`
-                whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm
-                ${isSelected
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }
-              `}
-            >
-              <span className="hidden sm:inline">{day.label}</span>
-              <span className="sm:hidden">{day.shortLabel}</span>
-              {count > 0 && (
-                <span className={`ml-2 py-0.5 px-2 rounded-full text-xs ${
-                  isSelected 
-                    ? 'bg-primary-100 text-primary-600' 
-                    : 'bg-gray-100 text-gray-600'
-                }`}>
-                  {count}
-                </span>
-              )}
-            </button>
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box>
+                    <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                      {day.label}
+                    </Box>
+                    <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
+                      {day.shortLabel}
+                    </Box>
+                  </Box>
+                  {count > 0 && (
+                    <Chip
+                      label={count}
+                      size="small"
+                      sx={{
+                        height: 20,
+                        fontSize: '0.75rem',
+                        bgcolor: selectedIndex === index ? 'primary.light' : 'grey.200',
+                        color: selectedIndex === index ? 'primary.contrastText' : 'text.secondary'
+                      }}
+                    />
+                  )}
+                </Box>
+              }
+              sx={{
+                textTransform: 'none',
+                fontWeight: 600,
+                minHeight: 48
+              }}
+            />
           )
         })}
-      </nav>
-    </div>
+      </Tabs>
+    </Box>
   )
 }

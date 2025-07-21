@@ -1,4 +1,6 @@
 import { GolfPairing, Attendee } from '@/lib/types'
+import { Card, CardContent, Typography, Box, Chip, Avatar, Grid, Alert } from '@mui/material'
+import { GolfCourse, Phone, Warning } from '@mui/icons-material'
 
 interface PairingsDisplayProps {
   pairings: GolfPairing[]
@@ -11,11 +13,15 @@ export default function PairingsDisplay({ pairings, attendees, currentUserId }: 
 
   if (sortedPairings.length === 0) {
     return (
-      <div className="text-center py-8">
-        <span className="text-6xl">⛳</span>
-        <h3 className="text-lg font-medium text-gray-900 mt-4">No pairings yet</h3>
-        <p className="text-gray-500 mt-2">Pairings will be announced closer to tee time</p>
-      </div>
+      <Box sx={{ textAlign: 'center', py: 8 }}>
+        <GolfCourse sx={{ fontSize: 80, color: 'primary.light', mb: 2 }} />
+        <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary', mb: 1 }}>
+          No pairings yet
+        </Typography>
+        <Typography color="text.secondary">
+          Pairings will be announced closer to tee time
+        </Typography>
+      </Box>
     )
   }
 
@@ -24,72 +30,103 @@ export default function PairingsDisplay({ pairings, attendees, currentUserId }: 
   }
 
   return (
-    <div className="space-y-6">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       {sortedPairings.map((pairing) => {
         const groupAttendees = pairing.attendee_ids.map(id => getAttendeeDetails(id)).filter(Boolean) as Attendee[]
         const isUserInGroup = currentUserId && pairing.attendee_ids.includes(currentUserId)
 
         return (
-          <div
+          <Card
             key={pairing.id}
-            className={`bg-white rounded-lg shadow border p-6 ${
-              isUserInGroup ? 'ring-2 ring-primary-500 bg-primary-50' : ''
-            }`}
+            sx={{
+              ...(isUserInGroup && {
+                border: 2,
+                borderColor: 'primary.main',
+                bgcolor: 'primary.50'
+              })
+            }}
           >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Group {pairing.group_number}
-              </h3>
-              {isUserInGroup && (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                  Your Group
-                </span>
-              )}
-            </div>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  Group {pairing.group_number}
+                </Typography>
+                {isUserInGroup && (
+                  <Chip
+                    label="Your Group"
+                    size="small"
+                    sx={{
+                      bgcolor: 'primary.main',
+                      color: 'primary.contrastText',
+                      fontWeight: 600
+                    }}
+                  />
+                )}
+              </Box>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {groupAttendees.map((attendee) => (
-                <div
-                  key={attendee.id}
-                  className={`p-4 rounded-lg border ${
-                    attendee.id === currentUserId
-                      ? 'bg-primary-100 border-primary-200'
-                      : 'bg-gray-50 border-gray-200'
-                  }`}
+              <Grid container spacing={2}>
+                {groupAttendees.map((attendee) => (
+                  <Grid item xs={12} sm={6} lg={3} key={attendee.id}>
+                    <Card
+                      variant="outlined"
+                      sx={{
+                        p: 2,
+                        textAlign: 'center',
+                        ...(attendee.id === currentUserId && {
+                          bgcolor: 'primary.50',
+                          borderColor: 'primary.main'
+                        })
+                      }}
+                    >
+                      <Avatar
+                        sx={{
+                          width: 48,
+                          height: 48,
+                          mx: 'auto',
+                          mb: 1,
+                          bgcolor: 'primary.light',
+                          color: 'primary.contrastText',
+                          fontSize: '1.125rem',
+                          fontWeight: 600
+                        }}
+                      >
+                        {attendee.name.split(' ').map(n => n[0]).join('')}
+                      </Avatar>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                        {attendee.name}
+                      </Typography>
+                      {attendee.golf_handicap !== null && attendee.golf_handicap !== undefined && (
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                          Handicap: {attendee.golf_handicap}
+                        </Typography>
+                      )}
+                      {attendee.phone && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
+                          <Phone sx={{ fontSize: 14, color: 'text.secondary' }} />
+                          <Typography variant="caption" color="text.secondary">
+                            {attendee.phone}
+                          </Typography>
+                        </Box>
+                      )}
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+
+              {groupAttendees.length < 4 && (
+                <Alert
+                  severity="warning"
+                  icon={<Warning />}
+                  sx={{ mt: 2 }}
                 >
-                  <div className="flex items-center justify-center w-12 h-12 mx-auto mb-2 bg-gray-300 rounded-full">
-                    <span className="text-lg font-medium text-gray-700">
-                      {attendee.name.split(' ').map(n => n[0]).join('')}
-                    </span>
-                  </div>
-                  <h4 className="text-center font-medium text-gray-900">
-                    {attendee.name}
-                  </h4>
-                  {attendee.golf_handicap !== null && attendee.golf_handicap !== undefined && (
-                    <p className="text-center text-sm text-gray-600 mt-1">
-                      Handicap: {attendee.golf_handicap}
-                    </p>
-                  )}
-                  {attendee.phone && (
-                    <p className="text-center text-xs text-gray-500 mt-1">
-                      {attendee.phone}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {groupAttendees.length < 4 && (
-              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-sm text-yellow-800">
-                  ⚠️ This group has {groupAttendees.length} player{groupAttendees.length !== 1 ? 's' : ''}. 
+                  This group has {groupAttendees.length} player{groupAttendees.length !== 1 ? 's' : ''}. 
                   Pairings may be adjusted before tee time.
-                </p>
-              </div>
-            )}
-          </div>
+                </Alert>
+              )}
+            </CardContent>
+          </Card>
         )
       })}
-    </div>
+    </Box>
   )
 }

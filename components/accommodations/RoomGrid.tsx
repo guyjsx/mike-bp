@@ -1,5 +1,7 @@
 import { Room, Attendee } from '@/lib/types'
 import RoomCard from './RoomCard'
+import { Box, Typography, Card, CardContent, Grid } from '@mui/material'
+import { Hotel, PersonAdd, EventAvailable } from '@mui/icons-material'
 
 interface RoomGridProps {
   rooms: Room[]
@@ -12,11 +14,15 @@ export default function RoomGrid({ rooms, attendees, currentUserId }: RoomGridPr
 
   if (sortedRooms.length === 0) {
     return (
-      <div className="text-center py-12">
-        <span className="text-8xl">🏨</span>
-        <h2 className="text-2xl font-bold text-gray-900 mt-4">No Room Assignments Yet</h2>
-        <p className="text-gray-600 mt-2">Room assignments will be posted soon!</p>
-      </div>
+      <Box sx={{ textAlign: 'center', py: 12 }}>
+        <Hotel sx={{ fontSize: 128, color: 'primary.light', mb: 2 }} />
+        <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary', mb: 1 }}>
+          No Room Assignments Yet
+        </Typography>
+        <Typography color="text.secondary">
+          Room assignments will be posted soon!
+        </Typography>
+      </Box>
     )
   }
 
@@ -26,37 +32,63 @@ export default function RoomGrid({ rooms, attendees, currentUserId }: RoomGridPr
   const availableSpots = totalCapacity - totalAssigned
 
   return (
-    <div className="space-y-6">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       {/* Room stats */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Room Overview</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">{rooms.length}</div>
-            <div className="text-sm text-blue-600">Total Rooms</div>
-          </div>
-          <div className="text-center p-4 bg-green-50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">{totalAssigned}</div>
-            <div className="text-sm text-green-600">Guests Assigned</div>
-          </div>
-          <div className="text-center p-4 bg-yellow-50 rounded-lg">
-            <div className="text-2xl font-bold text-yellow-600">{availableSpots}</div>
-            <div className="text-sm text-yellow-600">Available Spots</div>
-          </div>
-        </div>
-      </div>
+      <Card>
+        <CardContent sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary', mb: 3 }}>
+            Room Overview
+          </Typography>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={4}>
+              <Card sx={{ textAlign: 'center', p: 3, bgcolor: 'primary.50' }}>
+                <Hotel sx={{ fontSize: 32, color: 'primary.main', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, color: 'primary.main' }}>
+                  {rooms.length}
+                </Typography>
+                <Typography variant="body2" color="primary.main">
+                  Total Rooms
+                </Typography>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Card sx={{ textAlign: 'center', p: 3, bgcolor: 'success.50' }}>
+                <PersonAdd sx={{ fontSize: 32, color: 'success.main', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, color: 'success.main' }}>
+                  {totalAssigned}
+                </Typography>
+                <Typography variant="body2" color="success.main">
+                  Guests Assigned
+                </Typography>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Card sx={{ textAlign: 'center', p: 3, bgcolor: 'warning.50' }}>
+                <EventAvailable sx={{ fontSize: 32, color: 'warning.main', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, color: 'warning.main' }}>
+                  {availableSpots}
+                </Typography>
+                <Typography variant="body2" color="warning.main">
+                  Available Spots
+                </Typography>
+              </Card>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
 
       {/* Room cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <Grid container spacing={3}>
         {sortedRooms.map((room) => (
-          <RoomCard
-            key={room.id}
-            room={room}
-            attendees={attendees}
-            currentUserId={currentUserId}
-          />
+          <Grid item xs={12} md={6} lg={4} key={room.id}>
+            <RoomCard
+              room={room}
+              attendees={attendees}
+              currentUserId={currentUserId}
+            />
+          </Grid>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Box>
   )
 }

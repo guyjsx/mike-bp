@@ -2,6 +2,17 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { 
+  Card, 
+  CardContent, 
+  TextField, 
+  Button, 
+  Typography, 
+  Box, 
+  Alert,
+  CircularProgress
+} from '@mui/material'
+import { GolfCourse, Person, AdminPanelSettings } from '@mui/icons-material'
 
 export default function LoginPage() {
   const [password, setPassword] = useState('')
@@ -40,63 +51,91 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h1 className="text-center text-3xl font-bold text-gray-900">
-            {process.env.NEXT_PUBLIC_EVENT_TITLE || 'Bachelor Party'}
-          </h1>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Enter the password to access the event
-          </p>
-        </div>
-        
-        <form className="mt-8 space-y-6" onSubmit={(e) => e.preventDefault()}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
-                placeholder="Enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {error && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="text-sm text-red-800">{error}</div>
-            </div>
-          )}
-
-          <div className="space-y-3">
-            <button
-              type="button"
-              onClick={() => handleLogin('attendee')}
-              disabled={loading || !password}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: 'background.default',
+        p: 3,
+      }}
+    >
+      <Card sx={{ maxWidth: 400, width: '100%' }}>
+        <CardContent sx={{ p: 4 }}>
+          <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <GolfCourse 
+              sx={{ 
+                fontSize: 60, 
+                color: 'primary.main', 
+                mb: 2 
+              }} 
+            />
+            <Typography 
+              variant="h4" 
+              component="h1" 
+              sx={{ 
+                fontWeight: 700, 
+                color: 'text.primary',
+                mb: 1
+              }}
             >
-              {loading ? 'Verifying...' : 'Attendee Access'}
-            </button>
-            
-            <button
-              type="button"
-              onClick={() => handleLogin('admin')}
-              disabled={loading || !password}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              {process.env.NEXT_PUBLIC_EVENT_TITLE || 'Golf Weekend'}
+            </Typography>
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
             >
-              {loading ? 'Verifying...' : 'Admin Access'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+              Enter the password to access the event
+            </Typography>
+          </Box>
+          
+          <Box component="form" onSubmit={(e) => e.preventDefault()}>
+            <TextField
+              fullWidth
+              type="password"
+              label="Password"
+              variant="outlined"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              sx={{ mb: 3 }}
+              disabled={loading}
+            />
+
+            {error && (
+              <Alert severity="error" sx={{ mb: 3 }}>
+                {error}
+              </Alert>
+            )}
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                size="large"
+                onClick={() => handleLogin('attendee')}
+                disabled={loading || !password}
+                startIcon={loading ? <CircularProgress size={20} /> : <Person />}
+                sx={{ py: 1.5 }}
+              >
+                {loading ? 'Verifying...' : 'Attendee Access'}
+              </Button>
+              
+              <Button
+                fullWidth
+                variant="outlined"
+                size="large"
+                onClick={() => handleLogin('admin')}
+                disabled={loading || !password}
+                startIcon={loading ? <CircularProgress size={20} /> : <AdminPanelSettings />}
+                sx={{ py: 1.5 }}
+              >
+                {loading ? 'Verifying...' : 'Admin Access'}
+              </Button>
+            </Box>
+          </Box>
+        </CardContent>
+      </Card>
+    </Box>
   )
 }

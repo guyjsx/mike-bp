@@ -1,4 +1,6 @@
 import { Room, Attendee } from '@/lib/types'
+import { Card, CardContent, Typography, Box, Chip, Avatar, Alert } from '@mui/material'
+import { Hotel, Person, HelpOutline } from '@mui/icons-material'
 
 interface RoomCardProps {
   room: Room
@@ -12,96 +14,151 @@ export default function RoomCard({ room, attendees, currentUserId }: RoomCardPro
   const hasAvailableSpace = roommates.length < room.capacity
 
   return (
-    <div className={`
-      bg-white rounded-lg shadow border p-6 
-      ${isUserInRoom ? 'ring-2 ring-primary-500 bg-primary-50' : ''}
-    `}>
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h3 className="text-xl font-bold text-gray-900">
-            Room {room.room_number}
-          </h3>
-          {room.check_in_name && (
-            <p className="text-sm text-gray-600">
-              Check-in: {room.check_in_name}
-            </p>
-          )}
-        </div>
-        <div className="text-right">
-          <div className="flex items-center space-x-1">
-            <span className="text-2xl">🛏️</span>
-            <span className="text-lg font-medium">
-              {roommates.length}/{room.capacity}
-            </span>
-          </div>
-          {isUserInRoom && (
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-100 text-primary-800 mt-1">
-              Your Room
-            </span>
-          )}
-        </div>
-      </div>
+    <Card
+      sx={{
+        height: '100%',
+        ...(isUserInRoom && {
+          border: 2,
+          borderColor: 'primary.main',
+          bgcolor: 'primary.50'
+        })
+      }}
+    >
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+          <Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+              <Hotel sx={{ color: 'primary.main' }} />
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                Room {room.room_number}
+              </Typography>
+            </Box>
+            {room.check_in_name && (
+              <Typography variant="body2" color="text.secondary">
+                Check-in: {room.check_in_name}
+              </Typography>
+            )}
+          </Box>
+          <Box sx={{ textAlign: 'right' }}>
+            <Chip
+              icon={<Person />}
+              label={`${roommates.length}/${room.capacity}`}
+              sx={{
+                fontSize: '1rem',
+                fontWeight: 600,
+                height: 32
+              }}
+            />
+            {isUserInRoom && (
+              <Chip
+                label="Your Room"
+                size="small"
+                sx={{
+                  mt: 0.5,
+                  display: 'block',
+                  bgcolor: 'primary.main',
+                  color: 'primary.contrastText'
+                }}
+              />
+            )}
+          </Box>
+        </Box>
 
-      <div className="space-y-3">
-        {roommates.length > 0 ? (
-          roommates.map((attendee) => (
-            <div
-              key={attendee.id}
-              className={`flex items-center space-x-3 p-3 rounded-lg ${
-                attendee.id === currentUserId
-                  ? 'bg-primary-100 border border-primary-200'
-                  : 'bg-gray-50'
-              }`}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+          {roommates.length > 0 ? (
+            roommates.map((attendee) => (
+              <Card
+                key={attendee.id}
+                variant="outlined"
+                sx={{
+                  p: 2,
+                  ...(attendee.id === currentUserId && {
+                    bgcolor: 'primary.50',
+                    borderColor: 'primary.main'
+                  })
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: 'primary.light',
+                      color: 'primary.contrastText',
+                      width: 40,
+                      height: 40
+                    }}
+                  >
+                    {attendee.name.split(' ').map(n => n[0]).join('')}
+                  </Avatar>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                      {attendee.name}
+                    </Typography>
+                    {attendee.phone && (
+                      <Typography variant="body2" color="text.secondary">
+                        {attendee.phone}
+                      </Typography>
+                    )}
+                  </Box>
+                  {attendee.id === currentUserId && (
+                    <Chip
+                      label="You"
+                      size="small"
+                      color="primary"
+                    />
+                  )}
+                </Box>
+              </Card>
+            ))
+          ) : (
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Hotel sx={{ fontSize: 64, color: 'text.secondary', mb: 1 }} />
+              <Typography color="text.secondary">
+                No one assigned yet
+              </Typography>
+            </Box>
+          )}
+
+          {/* Show empty slots */}
+          {Array.from({ length: room.capacity - roommates.length }).map((_, index) => (
+            <Card
+              key={`empty-${index}`}
+              variant="outlined"
+              sx={{
+                p: 2,
+                borderStyle: 'dashed',
+                borderColor: 'grey.300',
+                bgcolor: 'grey.50'
+              }}
             >
-              <div className="flex items-center justify-center w-10 h-10 bg-gray-300 rounded-full">
-                <span className="text-sm font-medium text-gray-700">
-                  {attendee.name.split(' ').map(n => n[0]).join('')}
-                </span>
-              </div>
-              <div className="flex-1">
-                <h4 className="font-medium text-gray-900">{attendee.name}</h4>
-                {attendee.phone && (
-                  <p className="text-sm text-gray-600">{attendee.phone}</p>
-                )}
-              </div>
-              {attendee.id === currentUserId && (
-                <span className="text-primary-600">You</span>
-              )}
-            </div>
-          ))
-        ) : (
-          <div className="text-center py-4 text-gray-500">
-            <span className="text-4xl">🏨</span>
-            <p className="mt-2">No one assigned yet</p>
-          </div>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Avatar sx={{ bgcolor: 'grey.300', color: 'grey.600' }}>
+                  <HelpOutline />
+                </Avatar>
+                <Typography color="text.secondary" sx={{ fontWeight: 500 }}>
+                  Available
+                </Typography>
+              </Box>
+            </Card>
+          ))}
+        </Box>
+
+        {room.notes && (
+          <Box sx={{ mt: 3, pt: 3, borderTop: 1, borderColor: 'divider' }}>
+            <Typography variant="body2" color="text.secondary">
+              {room.notes}
+            </Typography>
+          </Box>
         )}
 
-        {/* Show empty slots */}
-        {Array.from({ length: room.capacity - roommates.length }).map((_, index) => (
-          <div key={`empty-${index}`} className="flex items-center space-x-3 p-3 rounded-lg bg-gray-50 border-2 border-dashed border-gray-200">
-            <div className="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full">
-              <span className="text-gray-400">?</span>
-            </div>
-            <div className="flex-1 text-gray-400">
-              <p className="font-medium">Available</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {room.notes && (
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <p className="text-sm text-gray-600">{room.notes}</p>
-        </div>
-      )}
-
-      {hasAvailableSpace && (
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-800">
-            💡 This room has space for {room.capacity - roommates.length} more guest{room.capacity - roommates.length !== 1 ? 's' : ''}
-          </p>
-        </div>
-      )}
-    </div>
+        {hasAvailableSpace && (
+          <Alert
+            severity="info"
+            sx={{ mt: 2 }}
+          >
+            This room has space for {room.capacity - roommates.length} more guest{room.capacity - roommates.length !== 1 ? 's' : ''}
+          </Alert>
+        )}
+      </CardContent>
+    </Card>
   )
 }

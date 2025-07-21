@@ -1,4 +1,6 @@
 import { Attendee } from '@/lib/types'
+import { Card, CardContent, Typography, Box, Chip, Avatar, Divider } from '@mui/material'
+import { TrendingUp, TrendingDown, Remove } from '@mui/icons-material'
 
 interface HandicapListProps {
   attendees: Attendee[]
@@ -14,52 +16,69 @@ export default function HandicapList({ attendees }: HandicapListProps) {
   }
 
   const getSkillLevel = (handicap: number) => {
-    if (handicap <= 5) return { label: 'Expert', color: 'text-red-600 bg-red-50' }
-    if (handicap <= 10) return { label: 'Advanced', color: 'text-orange-600 bg-orange-50' }
-    if (handicap <= 18) return { label: 'Intermediate', color: 'text-yellow-600 bg-yellow-50' }
-    return { label: 'Beginner', color: 'text-green-600 bg-green-50' }
+    if (handicap <= 5) return { label: 'Expert', color: 'error', icon: <TrendingUp /> }
+    if (handicap <= 10) return { label: 'Advanced', color: 'warning', icon: <TrendingUp /> }
+    if (handicap <= 18) return { label: 'Intermediate', color: 'info', icon: <Remove /> }
+    return { label: 'Beginner', color: 'success', icon: <TrendingDown /> }
   }
 
   return (
-    <div className="bg-white rounded-lg shadow border p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-        Player Handicaps
-      </h3>
-      
-      <div className="space-y-3">
-        {golfers.map((golfer) => {
-          const skillLevel = getSkillLevel(golfer.golf_handicap!)
-          
-          return (
-            <div key={golfer.id} className="flex items-center justify-between py-2">
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center justify-center w-8 h-8 bg-gray-300 rounded-full">
-                  <span className="text-sm font-medium text-gray-700">
+    <Card>
+      <CardContent sx={{ p: 3 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary', mb: 3 }}>
+          Player Handicaps
+        </Typography>
+        
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {golfers.map((golfer) => {
+            const skillLevel = getSkillLevel(golfer.golf_handicap!)
+            
+            return (
+              <Box key={golfer.id} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', py: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Avatar
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      bgcolor: 'primary.light',
+                      color: 'primary.contrastText',
+                      fontSize: '0.875rem',
+                      fontWeight: 600
+                    }}
+                  >
                     {golfer.name.split(' ').map(n => n[0]).join('')}
-                  </span>
-                </div>
-                <span className="font-medium text-gray-900">{golfer.name}</span>
-              </div>
-              
-              <div className="flex items-center space-x-3">
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${skillLevel.color}`}>
-                  {skillLevel.label}
-                </span>
-                <span className="text-lg font-bold text-gray-700">
-                  {golfer.golf_handicap}
-                </span>
-              </div>
-            </div>
-          )
-        })}
-      </div>
+                  </Avatar>
+                  <Typography sx={{ fontWeight: 500 }}>{golfer.name}</Typography>
+                </Box>
+                
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Chip
+                    icon={skillLevel.icon}
+                    label={skillLevel.label}
+                    color={skillLevel.color as any}
+                    size="small"
+                    variant="outlined"
+                  />
+                  <Typography variant="h6" sx={{ fontWeight: 700, minWidth: 24, textAlign: 'center' }}>
+                    {golfer.golf_handicap}
+                  </Typography>
+                </Box>
+              </Box>
+            )
+          })}
+        </Box>
 
-      <div className="mt-6 pt-4 border-t border-gray-100">
-        <div className="text-sm text-gray-600">
-          <p><strong>Average:</strong> {Math.round(golfers.reduce((sum, g) => sum + (g.golf_handicap || 0), 0) / golfers.length)}</p>
-          <p><strong>Range:</strong> {Math.min(...golfers.map(g => g.golf_handicap || 0))} - {Math.max(...golfers.map(g => g.golf_handicap || 0))}</p>
-        </div>
-      </div>
-    </div>
+        <Divider sx={{ my: 3 }} />
+        
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <Typography variant="body2" color="text.secondary">
+            <strong>Average:</strong> {Math.round(golfers.reduce((sum, g) => sum + (g.golf_handicap || 0), 0) / golfers.length)}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            <strong>Range:</strong> {Math.min(...golfers.map(g => g.golf_handicap || 0))} - {Math.max(...golfers.map(g => g.golf_handicap || 0))}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
   )
 }

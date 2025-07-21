@@ -1,3 +1,6 @@
+import { Card, CardContent, Typography, Box, Grid, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import { LocationOn, Phone, Map, AccessTime, Info, Pool, FitnessCenter, Restaurant, Casino } from '@mui/icons-material'
+
 export default function HotelInfo() {
   const hotelInfo = {
     name: 'Caesars Southern Indiana',
@@ -9,80 +12,158 @@ export default function HotelInfo() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow border p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Hotel Information</h3>
-      
-      <div className="space-y-4">
-        <div>
-          <h4 className="font-medium text-gray-900">{hotelInfo.name}</h4>
-          <p className="text-gray-600">{hotelInfo.address}</p>
-        </div>
+    <Card>
+      <CardContent sx={{ p: 3 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary', mb: 3 }}>
+          Hotel Information
+        </Typography>
+        
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+              {hotelInfo.name}
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <LocationOn sx={{ fontSize: 18, color: 'text.secondary' }} />
+              <Typography color="text.secondary">
+                {hotelInfo.address}
+              </Typography>
+            </Box>
+          </Box>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <h5 className="font-medium text-gray-900 mb-2">Check-in/Check-out</h5>
-            <div className="space-y-1 text-sm text-gray-600">
-              <p>🕐 Check-in: {hotelInfo.checkIn}</p>
-              <p>🕐 Check-out: {hotelInfo.checkOut}</p>
-            </div>
-          </div>
-          
-          <div>
-            <h5 className="font-medium text-gray-900 mb-2">Contact</h5>
-            <div className="space-y-1">
-              <a 
-                href={`tel:${hotelInfo.phone}`}
-                className="flex items-center text-sm text-primary-600 hover:text-primary-700"
-              >
-                <span className="mr-2">📞</span>
-                {hotelInfo.phone}
-              </a>
-              <a
-                href={hotelInfo.mapLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center text-sm text-primary-600 hover:text-primary-700"
-              >
-                <span className="mr-2">🗺️</span>
-                Get Directions
-              </a>
-            </div>
-          </div>
-        </div>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <AccessTime sx={{ fontSize: 18 }} />
+                Check-in/Check-out
+              </Typography>
+              <Box sx={{ pl: 3 }}>
+                <Typography variant="body2" color="text.secondary">
+                  Check-in: {hotelInfo.checkIn}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Check-out: {hotelInfo.checkOut}
+                </Typography>
+              </Box>
+            </Grid>
+            
+            <Grid item xs={12} sm={6}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                Contact
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Box
+                  component="a"
+                  href={`tel:${hotelInfo.phone}`}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    color: 'primary.main',
+                    textDecoration: 'none',
+                    '&:hover': { textDecoration: 'underline' }
+                  }}
+                >
+                  <Phone sx={{ fontSize: 18 }} />
+                  <Typography variant="body2">
+                    {hotelInfo.phone}
+                  </Typography>
+                </Box>
+                <Box
+                  component="a"
+                  href={hotelInfo.mapLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    color: 'primary.main',
+                    textDecoration: 'none',
+                    '&:hover': { textDecoration: 'underline' }
+                  }}
+                >
+                  <Map sx={{ fontSize: 18 }} />
+                  <Typography variant="body2">
+                    Get Directions
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
 
-        <div className="pt-4 border-t border-gray-100">
-          <h5 className="font-medium text-gray-900 mb-2">Important Notes</h5>
-          <ul className="text-sm text-gray-600 space-y-1">
-            <li>• Valid photo ID and credit card required at check-in</li>
-            <li>• Parking is complimentary for hotel guests</li>
-            <li>• Casino floor is 21+ only</li>
-            <li>• Room service available 24/7</li>
-            <li>• Free WiFi throughout the property</li>
-          </ul>
-        </div>
+          <Box sx={{ pt: 2, borderTop: 1, borderColor: 'divider' }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Info sx={{ fontSize: 18 }} />
+              Important Notes
+            </Typography>
+            <List dense sx={{ pl: 2 }}>
+              <ListItem sx={{ py: 0.25, px: 0 }}>
+                <ListItemText
+                  primary="Valid photo ID and credit card required at check-in"
+                  sx={{ '& .MuiListItemText-primary': { fontSize: '0.875rem', color: 'text.secondary' } }}
+                />
+              </ListItem>
+              <ListItem sx={{ py: 0.25, px: 0 }}>
+                <ListItemText
+                  primary="Parking is complimentary for hotel guests"
+                  sx={{ '& .MuiListItemText-primary': { fontSize: '0.875rem', color: 'text.secondary' } }}
+                />
+              </ListItem>
+              <ListItem sx={{ py: 0.25, px: 0 }}>
+                <ListItemText
+                  primary="Casino floor is 21+ only"
+                  sx={{ '& .MuiListItemText-primary': { fontSize: '0.875rem', color: 'text.secondary' } }}
+                />
+              </ListItem>
+              <ListItem sx={{ py: 0.25, px: 0 }}>
+                <ListItemText
+                  primary="Room service available 24/7"
+                  sx={{ '& .MuiListItemText-primary': { fontSize: '0.875rem', color: 'text.secondary' } }}
+                />
+              </ListItem>
+              <ListItem sx={{ py: 0.25, px: 0 }}>
+                <ListItemText
+                  primary="Free WiFi throughout the property"
+                  sx={{ '& .MuiListItemText-primary': { fontSize: '0.875rem', color: 'text.secondary' } }}
+                />
+              </ListItem>
+            </List>
+          </Box>
 
-        <div className="pt-4 border-t border-gray-100">
-          <h5 className="font-medium text-gray-900 mb-2">Amenities</h5>
-          <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
-            <div className="flex items-center">
-              <span className="mr-2">🏊‍♂️</span>
-              <span>Pool & Spa</span>
-            </div>
-            <div className="flex items-center">
-              <span className="mr-2">🏋️‍♂️</span>
-              <span>Fitness Center</span>
-            </div>
-            <div className="flex items-center">
-              <span className="mr-2">🍽️</span>
-              <span>Multiple Restaurants</span>
-            </div>
-            <div className="flex items-center">
-              <span className="mr-2">🎰</span>
-              <span>Casino</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          <Box sx={{ pt: 2, borderTop: 1, borderColor: 'divider' }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2 }}>
+              Amenities
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Pool sx={{ fontSize: 18, color: 'primary.main' }} />
+                  <Typography variant="body2">Pool & Spa</Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <FitnessCenter sx={{ fontSize: 18, color: 'primary.main' }} />
+                  <Typography variant="body2">Fitness Center</Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Restaurant sx={{ fontSize: 18, color: 'primary.main' }} />
+                  <Typography variant="body2">Multiple Restaurants</Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Casino sx={{ fontSize: 18, color: 'primary.main' }} />
+                  <Typography variant="body2">Casino</Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+      </CardContent>
+    </Card>
   )
 }

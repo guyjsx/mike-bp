@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Card, Typography, Box, Grid } from '@mui/material'
+import { GolfCourse, Celebration } from '@mui/icons-material'
 
 export default function CountdownTimer() {
   const [timeLeft, setTimeLeft] = useState({
@@ -38,34 +40,82 @@ export default function CountdownTimer() {
 
   if (eventStarted) {
     return (
-      <div className="bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg shadow-lg p-8 text-white">
-        <h2 className="text-2xl font-bold text-center mb-2">The Party Has Started! 🎉</h2>
-        <p className="text-center text-lg">Hope you&apos;re having an amazing time!</p>
-      </div>
+      <Card
+        sx={{
+          background: 'linear-gradient(135deg, #2d8f2d 0%, #1f6b1f 100%)',
+          color: 'white',
+          p: 4,
+          textAlign: 'center'
+        }}
+      >
+        <Celebration sx={{ fontSize: 60, mb: 2 }} />
+        <Typography variant="h4" component="h2" sx={{ fontWeight: 700, mb: 2 }}>
+          The Golf Weekend Has Started!
+        </Typography>
+        <Typography variant="h6">
+          Hope you&apos;re having an amazing time on the course!
+        </Typography>
+      </Card>
     )
   }
 
   return (
-    <div className="bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg shadow-lg p-8 text-white">
-      <h2 className="text-2xl font-bold text-center mb-6">Countdown to the Big Weekend</h2>
-      <div className="grid grid-cols-4 gap-4">
-        <div className="text-center">
-          <div className="text-3xl font-bold">{timeLeft.days}</div>
-          <div className="text-sm uppercase">Days</div>
-        </div>
-        <div className="text-center">
-          <div className="text-3xl font-bold">{timeLeft.hours}</div>
-          <div className="text-sm uppercase">Hours</div>
-        </div>
-        <div className="text-center">
-          <div className="text-3xl font-bold">{timeLeft.minutes}</div>
-          <div className="text-sm uppercase">Minutes</div>
-        </div>
-        <div className="text-center">
-          <div className="text-3xl font-bold">{timeLeft.seconds}</div>
-          <div className="text-sm uppercase">Seconds</div>
-        </div>
-      </div>
-    </div>
+    <Card
+      sx={{
+        background: 'linear-gradient(135deg, #2d8f2d 0%, #1f6b1f 100%)',
+        color: 'white',
+        p: 4
+      }}
+    >
+      <Box sx={{ textAlign: 'center', mb: 4 }}>
+        <GolfCourse sx={{ fontSize: 48, mb: 2 }} />
+        <Typography variant="h4" component="h2" sx={{ fontWeight: 700 }}>
+          Countdown to Tee Time
+        </Typography>
+      </Box>
+      
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="h2" sx={{ fontWeight: 700 }}>
+              {timeLeft.days}
+            </Typography>
+            <Typography variant="caption" sx={{ textTransform: 'uppercase', fontSize: '0.8rem' }}>
+              Days
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={3}>
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="h2" sx={{ fontWeight: 700 }}>
+              {timeLeft.hours}
+            </Typography>
+            <Typography variant="caption" sx={{ textTransform: 'uppercase', fontSize: '0.8rem' }}>
+              Hours
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={3}>
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="h2" sx={{ fontWeight: 700 }}>
+              {timeLeft.minutes}
+            </Typography>
+            <Typography variant="caption" sx={{ textTransform: 'uppercase', fontSize: '0.8rem' }}>
+              Minutes
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={3}>
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="h2" sx={{ fontWeight: 700 }}>
+              {timeLeft.seconds}
+            </Typography>
+            <Typography variant="caption" sx={{ textTransform: 'uppercase', fontSize: '0.8rem' }}>
+              Seconds
+            </Typography>
+          </Box>
+        </Grid>
+      </Grid>
+    </Card>
   )
 }

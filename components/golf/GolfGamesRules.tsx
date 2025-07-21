@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { Card, CardContent, Typography, Box, Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItemText, Alert } from '@mui/material'
+import { ExpandMore, LightbulbOutlined, Casino } from '@mui/icons-material'
 
 export default function GolfGamesRules() {
   const [expandedGame, setExpandedGame] = useState<string | null>(null)
@@ -58,68 +60,112 @@ export default function GolfGamesRules() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow border p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-        Golf Games & Rules
-      </h3>
-      
-      <div className="space-y-4">
-        {games.map((game) => {
-          const isExpanded = expandedGame === game.name
-          
-          return (
-            <div key={game.name} className="border border-gray-200 rounded-lg">
-              <button
-                onClick={() => toggleGame(game.name)}
-                className="w-full px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+    <Card>
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
+          <Casino sx={{ color: 'primary.main' }} />
+          <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+            Golf Games & Rules
+          </Typography>
+        </Box>
+        
+        <Box sx={{ mb: 3 }}>
+          {games.map((game) => {
+            const isExpanded = expandedGame === game.name
+            
+            return (
+              <Accordion
+                key={game.name}
+                expanded={isExpanded}
+                onChange={() => toggleGame(game.name)}
+                sx={{ mb: 1, '&:before': { display: 'none' } }}
               >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium text-gray-900">{game.name}</h4>
-                    <p className="text-sm text-gray-600 mt-1">{game.description}</p>
-                  </div>
-                  <span className="text-gray-400">
-                    {isExpanded ? '−' : '+'}
-                  </span>
-                </div>
-              </button>
-              
-              {isExpanded && (
-                <div className="px-4 pb-4 border-t border-gray-100">
-                  <div className="mt-3">
-                    <h5 className="font-medium text-gray-900 mb-2">Rules:</h5>
-                    <ul className="space-y-1 text-sm text-gray-600">
-                      {game.rules.map((rule, index) => (
-                        <li key={index} className="flex items-start">
-                          <span className="mr-2">•</span>
-                          <span>{rule}</span>
-                        </li>
-                      ))}
-                    </ul>
+                <AccordionSummary
+                  expandIcon={<ExpandMore />}
+                  sx={{
+                    '& .MuiAccordionSummary-content': {
+                      flexDirection: 'column',
+                      alignItems: 'flex-start'
+                    }
+                  }}
+                >
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                    {game.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {game.description}
+                  </Typography>
+                </AccordionSummary>
+                
+                <AccordionDetails>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Box>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                        Rules:
+                      </Typography>
+                      <List dense sx={{ py: 0 }}>
+                        {game.rules.map((rule, index) => (
+                          <ListItem key={index} sx={{ py: 0.25, px: 0 }}>
+                            <ListItemText
+                              primary={rule}
+                              sx={{
+                                '& .MuiListItemText-primary': {
+                                  fontSize: '0.875rem',
+                                  color: 'text.secondary'
+                                }
+                              }}
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Box>
                     
-                    <div className="mt-3 p-2 bg-green-50 rounded border">
-                      <p className="text-sm">
-                        <strong className="text-green-800">Suggested bet:</strong> 
-                        <span className="text-green-700 ml-1">{game.suggestedBet}</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </div>
+                    <Alert
+                      severity="success"
+                      variant="outlined"
+                      sx={{
+                        '& .MuiAlert-message': {
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 1
+                        }
+                      }}
+                    >
+                      <Typography variant="body2">
+                        <strong>Suggested bet:</strong> {game.suggestedBet}
+                      </Typography>
+                    </Alert>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+            )
+          })}
+        </Box>
 
-      <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        <h4 className="font-medium text-blue-900 mb-2">💡 Pro Tips</h4>
-        <ul className="text-sm text-blue-800 space-y-1">
-          <li>• Keep games simple and fun - don&apos;t let money ruin friendships!</li>
-          <li>• Agree on rules and handicap strokes before teeing off</li>
-          <li>• Consider playing multiple games simultaneously</li>
-          <li>• Have someone designated to track scores and bets</li>
-        </ul>
-      </div>
-    </div>
+        <Alert
+          severity="info"
+          icon={<LightbulbOutlined />}
+          sx={{ mt: 2 }}
+        >
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+            Pro Tips
+          </Typography>
+          <List dense sx={{ py: 0 }}>
+            <ListItem sx={{ py: 0.25, px: 0 }}>
+              <ListItemText primary="Keep games simple and fun - don't let money ruin friendships!" />
+            </ListItem>
+            <ListItem sx={{ py: 0.25, px: 0 }}>
+              <ListItemText primary="Agree on rules and handicap strokes before teeing off" />
+            </ListItem>
+            <ListItem sx={{ py: 0.25, px: 0 }}>
+              <ListItemText primary="Consider playing multiple games simultaneously" />
+            </ListItem>
+            <ListItem sx={{ py: 0.25, px: 0 }}>
+              <ListItemText primary="Have someone designated to track scores and bets" />
+            </ListItem>
+          </List>
+        </Alert>
+      </CardContent>
+    </Card>
   )
 }

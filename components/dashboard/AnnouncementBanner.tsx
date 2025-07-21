@@ -1,4 +1,6 @@
 import { Announcement } from '@/lib/types'
+import { Alert, Box } from '@mui/material'
+import { Campaign } from '@mui/icons-material'
 
 interface AnnouncementBannerProps {
   announcements: Announcement[]
@@ -12,22 +14,23 @@ export default function AnnouncementBanner({ announcements }: AnnouncementBanner
   }
 
   return (
-    <div className="space-y-2">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       {activeAnnouncements.map((announcement) => (
-        <div
+        <Alert
           key={announcement.id}
-          className="bg-yellow-50 border border-yellow-200 rounded-lg p-4"
+          severity="info"
+          icon={<Campaign />}
+          sx={{
+            backgroundColor: 'warning.light',
+            color: 'warning.contrastText',
+            '& .MuiAlert-icon': {
+              color: 'warning.main'
+            }
+          }}
         >
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <span className="text-2xl">📢</span>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-yellow-800">{announcement.message}</p>
-            </div>
-          </div>
-        </div>
+          {announcement.message}
+        </Alert>
       ))}
-    </div>
+    </Box>
   )
 }

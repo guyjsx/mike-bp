@@ -1,4 +1,6 @@
 import { ExpensePayment, Attendee } from '@/lib/types'
+import { Card, CardContent, Typography, Box, Avatar, Button, Alert } from '@mui/material'
+import { AccountBalance, TrendingUp, TrendingDown, CheckCircle, ContentCopy } from '@mui/icons-material'
 
 interface PersonalBalanceProps {
   payments: ExpensePayment[]
@@ -40,109 +42,134 @@ export default function PersonalBalance({ payments, attendees, currentUserId }: 
   }
 
   return (
-    <div className="bg-white rounded-lg shadow border p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Balance</h3>
-      
-      {/* Net balance */}
-      <div className={`text-center p-6 rounded-lg mb-6 ${
-        netBalance > 0 
-          ? 'bg-green-50 border border-green-200' 
-          : netBalance < 0 
-            ? 'bg-red-50 border border-red-200'
-            : 'bg-gray-50 border border-gray-200'
-      }`}>
-        <div className={`text-3xl font-bold ${
-          netBalance > 0 ? 'text-green-600' : netBalance < 0 ? 'text-red-600' : 'text-gray-600'
-        }`}>
-          {netBalance >= 0 ? '+' : ''}${netBalance.toFixed(2)}
-        </div>
-        <p className={`text-sm mt-1 ${
-          netBalance > 0 ? 'text-green-600' : netBalance < 0 ? 'text-red-600' : 'text-gray-600'
-        }`}>
-          {netBalance > 0 
-            ? 'You are owed this amount' 
-            : netBalance < 0 
-              ? 'You owe this amount'
-              : 'You\'re all settled up!'
-          }
-        </p>
-      </div>
+    <Card>
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
+          <AccountBalance sx={{ color: 'primary.main' }} />
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Your Balance
+          </Typography>
+        </Box>
+        
+        {/* Net balance */}
+        <Alert
+          severity={netBalance > 0 ? 'success' : netBalance < 0 ? 'error' : 'info'}
+          icon={netBalance > 0 ? <TrendingUp /> : netBalance < 0 ? <TrendingDown /> : <CheckCircle />}
+          sx={{ mb: 3 }}
+        >
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>
+              {netBalance >= 0 ? '+' : ''}${netBalance.toFixed(2)}
+            </Typography>
+            <Typography variant="body2">
+              {netBalance > 0 
+                ? 'You are owed this amount' 
+                : netBalance < 0 
+                  ? 'You owe this amount'
+                  : 'You\'re all settled up!'
+              }
+            </Typography>
+          </Box>
+        </Alert>
 
-      {/* What you owe others */}
-      {Object.keys(owedToOthers).length > 0 && (
-        <div className="mb-6">
-          <h4 className="font-medium text-gray-900 mb-3">You Owe:</h4>
-          <div className="space-y-3">
-            {Object.entries(owedToOthers).map(([personId, amount]) => {
-              const person = getAttendee(personId)
-              if (!person) return null
-              
-              return (
-                <div key={personId} className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                      <span className="text-xs font-medium text-gray-700">
-                        {person.name.split(' ').map(n => n[0]).join('')}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900">{person.name}</p>
-                      {person.venmo_handle && (
-                        <p className="text-xs text-gray-600">Venmo: {person.venmo_handle}</p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-lg font-bold text-red-600">${amount.toFixed(2)}</div>
-                    {person.venmo_handle && (
-                      <button
-                        onClick={() => navigator.clipboard.writeText(person.venmo_handle!)}
-                        className="text-xs text-primary-600 hover:text-primary-700"
-                      >
-                        Copy Venmo
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      )}
+        {/* What you owe others */}
+        {Object.keys(owedToOthers).length > 0 && (
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: 'error.main' }}>
+              You Owe:
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {Object.entries(owedToOthers).map(([personId, amount]) => {
+                const person = getAttendee(personId)
+                if (!person) return null
+                
+                return (
+                  <Card key={personId} sx={{ bgcolor: 'error.50', border: 1, borderColor: 'error.200' }}>
+                    <CardContent sx={{ p: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <Avatar sx={{ bgcolor: 'error.light', color: 'error.contrastText', width: 32, height: 32 }}>
+                            {person.name.split(' ').map(n => n[0]).join('')}
+                          </Avatar>
+                          <Box>
+                            <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                              {person.name}
+                            </Typography>
+                            {person.venmo_handle && (
+                              <Typography variant="caption" color="text.secondary">
+                                Venmo: {person.venmo_handle}
+                              </Typography>
+                            )}
+                          </Box>
+                        </Box>
+                        <Box sx={{ textAlign: 'right' }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700, color: 'error.main' }}>
+                            ${amount.toFixed(2)}
+                          </Typography>
+                          {person.venmo_handle && (
+                            <Button
+                              size="small"
+                              startIcon={<ContentCopy />}
+                              onClick={() => navigator.clipboard.writeText(person.venmo_handle!)}
+                              sx={{ fontSize: '0.75rem' }}
+                            >
+                              Copy Venmo
+                            </Button>
+                          )}
+                        </Box>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </Box>
+          </Box>
+        )}
 
-      {/* What others owe you */}
-      {Object.keys(owedByOthers).length > 0 && (
-        <div>
-          <h4 className="font-medium text-gray-900 mb-3">Others Owe You:</h4>
-          <div className="space-y-3">
-            {Object.entries(owedByOthers).map(([personId, amount]) => {
-              const person = getAttendee(personId)
-              if (!person) return null
-              
-              return (
-                <div key={personId} className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                      <span className="text-xs font-medium text-gray-700">
-                        {person.name.split(' ').map(n => n[0]).join('')}
-                      </span>
-                    </div>
-                    <p className="font-medium text-gray-900">{person.name}</p>
-                  </div>
-                  <div className="text-lg font-bold text-green-600">${amount.toFixed(2)}</div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      )}
+        {/* What others owe you */}
+        {Object.keys(owedByOthers).length > 0 && (
+          <Box>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: 'success.main' }}>
+              Others Owe You:
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {Object.entries(owedByOthers).map(([personId, amount]) => {
+                const person = getAttendee(personId)
+                if (!person) return null
+                
+                return (
+                  <Card key={personId} sx={{ bgcolor: 'success.50', border: 1, borderColor: 'success.200' }}>
+                    <CardContent sx={{ p: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <Avatar sx={{ bgcolor: 'success.light', color: 'success.contrastText', width: 32, height: 32 }}>
+                            {person.name.split(' ').map(n => n[0]).join('')}
+                          </Avatar>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                            {person.name}
+                          </Typography>
+                        </Box>
+                        <Typography variant="h6" sx={{ fontWeight: 700, color: 'success.main' }}>
+                          ${amount.toFixed(2)}
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </Box>
+          </Box>
+        )}
 
-      {totalOwed === 0 && totalOwedToUser === 0 && (
-        <div className="text-center py-6">
-          <span className="text-6xl">✅</span>
-          <p className="text-gray-600 mt-2">No outstanding balances</p>
-        </div>
-      )}
-    </div>
+        {totalOwed === 0 && totalOwedToUser === 0 && (
+          <Box sx={{ textAlign: 'center', py: 6 }}>
+            <CheckCircle sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
+            <Typography color="text.secondary">
+              No outstanding balances
+            </Typography>
+          </Box>
+        )}
+      </CardContent>
+    </Card>
   )
 }

@@ -1,5 +1,7 @@
 import { Attendee } from '@/lib/types'
 import AttendeeCard from './AttendeeCard'
+import { Box, Typography, Card, CardContent, Grid } from '@mui/material'
+import { People, GolfCourse, Restaurant } from '@mui/icons-material'
 
 interface AttendeeGridProps {
   attendees: Attendee[]
@@ -18,49 +20,75 @@ export default function AttendeeGrid({ attendees, currentUserId }: AttendeeGridP
 
   if (attendees.length === 0) {
     return (
-      <div className="text-center py-12">
-        <span className="text-8xl">👥</span>
-        <h2 className="text-2xl font-bold text-gray-900 mt-4">No Attendees</h2>
-        <p className="text-gray-600 mt-2">Attendee information will appear here</p>
-      </div>
+      <Box sx={{ textAlign: 'center', py: 12 }}>
+        <People sx={{ fontSize: 128, color: 'primary.light', mb: 2 }} />
+        <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary', mb: 1 }}>
+          No Attendees
+        </Typography>
+        <Typography color="text.secondary">
+          Attendee information will appear here
+        </Typography>
+      </Box>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       {/* Stats */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Group Stats</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">{attendees.length}</div>
-            <div className="text-sm text-blue-600">Total Attendees</div>
-          </div>
-          <div className="text-center p-4 bg-green-50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">
-              {attendees.filter(a => a.golf_handicap !== null && a.golf_handicap !== undefined).length}
-            </div>
-            <div className="text-sm text-green-600">Golfers</div>
-          </div>
-          <div className="text-center p-4 bg-purple-50 rounded-lg">
-            <div className="text-2xl font-bold text-purple-600">
-              {attendees.filter(a => a.dietary_restrictions && a.dietary_restrictions.toLowerCase() !== 'none').length}
-            </div>
-            <div className="text-sm text-purple-600">Dietary Restrictions</div>
-          </div>
-        </div>
-      </div>
+      <Card>
+        <CardContent sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary', mb: 3 }}>
+            Group Stats
+          </Typography>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={4}>
+              <Card sx={{ textAlign: 'center', p: 3, bgcolor: 'primary.50' }}>
+                <People sx={{ fontSize: 32, color: 'primary.main', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, color: 'primary.main' }}>
+                  {attendees.length}
+                </Typography>
+                <Typography variant="body2" color="primary.main">
+                  Total Attendees
+                </Typography>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Card sx={{ textAlign: 'center', p: 3, bgcolor: 'success.50' }}>
+                <GolfCourse sx={{ fontSize: 32, color: 'success.main', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, color: 'success.main' }}>
+                  {attendees.filter(a => a.golf_handicap !== null && a.golf_handicap !== undefined).length}
+                </Typography>
+                <Typography variant="body2" color="success.main">
+                  Golfers
+                </Typography>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Card sx={{ textAlign: 'center', p: 3, bgcolor: 'secondary.50' }}>
+                <Restaurant sx={{ fontSize: 32, color: 'secondary.main', mb: 1 }} />
+                <Typography variant="h4" sx={{ fontWeight: 700, color: 'secondary.main' }}>
+                  {attendees.filter(a => a.dietary_restrictions && a.dietary_restrictions.toLowerCase() !== 'none').length}
+                </Typography>
+                <Typography variant="body2" color="secondary.main">
+                  Dietary Restrictions
+                </Typography>
+              </Card>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
 
       {/* Attendee cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <Grid container spacing={3}>
         {sortedAttendees.map((attendee) => (
-          <AttendeeCard
-            key={attendee.id}
-            attendee={attendee}
-            isCurrentUser={attendee.id === currentUserId}
-          />
+          <Grid item xs={12} sm={6} md={4} lg={3} key={attendee.id}>
+            <AttendeeCard
+              attendee={attendee}
+              isCurrentUser={attendee.id === currentUserId}
+            />
+          </Grid>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Box>
   )
 }

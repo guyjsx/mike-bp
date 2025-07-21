@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Event, Attendee } from '@/lib/types'
+import { Box, Typography, Card, CircularProgress } from '@mui/material'
+import { Schedule } from '@mui/icons-material'
 import DayTabs from '@/components/schedule/DayTabs'
 import EventTimeline from '@/components/schedule/EventTimeline'
 
@@ -57,40 +59,44 @@ export default function SchedulePage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-64">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading schedule...</p>
-        </div>
-      </div>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box sx={{ textAlign: 'center' }}>
+          <CircularProgress size={48} sx={{ color: 'primary.main' }} />
+          <Typography sx={{ mt: 2, color: 'text.secondary' }}>
+            Loading schedule...
+          </Typography>
+        </Box>
+      </Box>
     )
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Weekend Schedule</h1>
-        <p className="mt-2 text-gray-600">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <Box>
+        <Typography variant="h3" component="h1" sx={{ fontWeight: 700, color: 'text.primary' }}>
+          Weekend Schedule
+        </Typography>
+        <Typography sx={{ mt: 1, color: 'text.secondary' }}>
           Your complete itinerary for the bachelor party weekend
-        </p>
-      </div>
+        </Typography>
+      </Box>
 
-      <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4">
+      <Card>
+        <Box sx={{ px: 3, py: 2 }}>
           <DayTabs
             selectedDay={selectedDay}
             onDayChange={setSelectedDay}
             eventCounts={eventCounts}
           />
-        </div>
-        <div className="px-6 pb-6">
+        </Box>
+        <Box sx={{ px: 3, pb: 3 }}>
           <EventTimeline
             events={filteredEvents}
             attendeeId={attendeeId}
             attendees={attendees}
           />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Card>
+    </Box>
   )
 }

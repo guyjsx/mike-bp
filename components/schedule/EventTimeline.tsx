@@ -1,4 +1,6 @@
 import { Event, Attendee } from '@/lib/types'
+import { Box, Typography } from '@mui/material'
+import { CalendarToday } from '@mui/icons-material'
 import EventCard from './EventCard'
 
 interface EventTimelineProps {
@@ -16,11 +18,15 @@ export default function EventTimeline({ events, attendeeId, attendees = [] }: Ev
 
   if (sortedEvents.length === 0) {
     return (
-      <div className="text-center py-8">
-        <span className="text-6xl">📅</span>
-        <h3 className="text-lg font-medium text-gray-900 mt-4">No events scheduled</h3>
-        <p className="text-gray-500 mt-2">Check back later for updates</p>
-      </div>
+      <Box sx={{ textAlign: 'center', py: 8 }}>
+        <CalendarToday sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
+        <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary', mb: 1 }}>
+          No events scheduled
+        </Typography>
+        <Typography color="text.secondary">
+          Check back later for updates
+        </Typography>
+      </Box>
     )
   }
 
@@ -31,7 +37,7 @@ export default function EventTimeline({ events, attendeeId, attendees = [] }: Ev
   })
 
   return (
-    <div className="space-y-4">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       {sortedEvents.map((event, index) => {
         const isAttending = attendeeId ? event.attendee_ids.includes(attendeeId) : true
         const isHighlighted = index === currentEventIndex
@@ -46,6 +52,6 @@ export default function EventTimeline({ events, attendeeId, attendees = [] }: Ev
           />
         )
       })}
-    </div>
+    </Box>
   )
 }

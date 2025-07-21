@@ -1,4 +1,6 @@
 import { Attendee } from '@/lib/types'
+import { Card, CardContent, Typography, Box, Avatar, Chip, IconButton, Divider } from '@mui/material'
+import { Phone, GolfCourse, AttachMoney, Restaurant, Emergency, FlightTakeoff, FlightLand, ContentCopy } from '@mui/icons-material'
 
 interface AttendeeCardProps {
   attendee: Attendee
@@ -7,106 +9,146 @@ interface AttendeeCardProps {
 
 export default function AttendeeCard({ attendee, isCurrentUser = false }: AttendeeCardProps) {
   return (
-    <div className={`bg-white rounded-lg shadow border p-6 ${
-      isCurrentUser ? 'ring-2 ring-primary-500 bg-primary-50' : ''
-    }`}>
-      <div className="text-center">
-        <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-gray-300 mb-4">
-          <span className="text-2xl font-medium text-gray-700">
-            {attendee.name.split(' ').map(n => n[0]).join('')}
-          </span>
-        </div>
+    <Card
+      sx={{
+        height: '100%',
+        ...(isCurrentUser && {
+          border: 2,
+          borderColor: 'primary.main',
+          bgcolor: 'primary.50'
+        })
+      }}
+    >
+      <CardContent sx={{ p: 3, textAlign: 'center' }}>
+        <Avatar
+          sx={{
+            width: 80,
+            height: 80,
+            mx: 'auto',
+            mb: 2,
+            bgcolor: 'primary.light',
+            color: 'primary.contrastText',
+            fontSize: '2rem',
+            fontWeight: 600
+          }}
+        >
+          {attendee.name.split(' ').map(n => n[0]).join('')}
+        </Avatar>
         
-        <h3 className="text-lg font-medium text-gray-900">
-          {attendee.name}
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+            {attendee.name}
+          </Typography>
           {isCurrentUser && (
-            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-100 text-primary-800">
-              You
-            </span>
+            <Chip
+              label="You"
+              size="small"
+              color="primary"
+              sx={{ fontWeight: 600 }}
+            />
           )}
-        </h3>
+        </Box>
         
-        <div className="mt-4 space-y-2">
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, alignItems: 'center' }}>
           {attendee.phone && (
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-lg">📞</span>
-              <a 
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Phone sx={{ fontSize: 18, color: 'text.secondary' }} />
+              <Typography
+                component="a"
                 href={`tel:${attendee.phone}`}
-                className="text-primary-600 hover:text-primary-700 text-sm"
+                variant="body2"
+                sx={{
+                  color: 'primary.main',
+                  textDecoration: 'none',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
               >
                 {attendee.phone}
-              </a>
-            </div>
+              </Typography>
+            </Box>
           )}
           
           {attendee.golf_handicap !== null && attendee.golf_handicap !== undefined && (
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-lg">⛳</span>
-              <span className="text-sm text-gray-600">
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <GolfCourse sx={{ fontSize: 18, color: 'text.secondary' }} />
+              <Typography variant="body2" color="text.secondary">
                 Handicap: {attendee.golf_handicap}
-              </span>
-            </div>
+              </Typography>
+            </Box>
           )}
           
           {attendee.venmo_handle && (
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-lg">💰</span>
-              <button
-                onClick={() => navigator.clipboard.writeText(attendee.venmo_handle!)}
-                className="text-primary-600 hover:text-primary-700 text-sm"
-                title="Click to copy Venmo handle"
-              >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <AttachMoney sx={{ fontSize: 18, color: 'text.secondary' }} />
+              <Typography variant="body2" color="primary.main">
                 {attendee.venmo_handle}
-              </button>
-            </div>
+              </Typography>
+              <IconButton
+                size="small"
+                onClick={() => navigator.clipboard.writeText(attendee.venmo_handle!)}
+                title="Click to copy Venmo handle"
+                sx={{ p: 0.5 }}
+              >
+                <ContentCopy sx={{ fontSize: 14 }} />
+              </IconButton>
+            </Box>
           )}
           
           {attendee.dietary_restrictions && (
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-lg">🥗</span>
-              <span className="text-sm text-gray-600">{attendee.dietary_restrictions}</span>
-            </div>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Restaurant sx={{ fontSize: 18, color: 'text.secondary' }} />
+              <Typography variant="body2" color="text.secondary">
+                {attendee.dietary_restrictions}
+              </Typography>
+            </Box>
           )}
           
           {attendee.emergency_contact && (
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-lg">🆘</span>
-              <span className="text-sm text-gray-600">{attendee.emergency_contact}</span>
-            </div>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Emergency sx={{ fontSize: 18, color: 'text.secondary' }} />
+              <Typography variant="body2" color="text.secondary">
+                {attendee.emergency_contact}
+              </Typography>
+            </Box>
           )}
-        </div>
+        </Box>
         
         {(attendee.arrival_time || attendee.departure_time) && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <div className="text-sm text-gray-600 space-y-1">
+          <Box sx={{ mt: 3, pt: 3 }}>
+            <Divider sx={{ mb: 2 }} />
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               {attendee.arrival_time && (
-                <div>
-                  <span className="font-medium">Arriving:</span> {' '}
-                  {new Date(attendee.arrival_time).toLocaleString('en-US', {
-                    weekday: 'short',
-                    month: 'short', 
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: '2-digit'
-                  })}
-                </div>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                  <FlightTakeoff sx={{ fontSize: 16, color: 'text.secondary' }} />
+                  <Typography variant="caption" color="text.secondary">
+                    <strong>Arriving:</strong> {new Date(attendee.arrival_time).toLocaleString('en-US', {
+                      weekday: 'short',
+                      month: 'short', 
+                      day: 'numeric',
+                      hour: 'numeric',
+                      minute: '2-digit'
+                    })}
+                  </Typography>
+                </Box>
               )}
               {attendee.departure_time && (
-                <div>
-                  <span className="font-medium">Departing:</span> {' '}
-                  {new Date(attendee.departure_time).toLocaleString('en-US', {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric', 
-                    hour: 'numeric',
-                    minute: '2-digit'
-                  })}
-                </div>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                  <FlightLand sx={{ fontSize: 16, color: 'text.secondary' }} />
+                  <Typography variant="caption" color="text.secondary">
+                    <strong>Departing:</strong> {new Date(attendee.departure_time).toLocaleString('en-US', {
+                      weekday: 'short',
+                      month: 'short',
+                      day: 'numeric', 
+                      hour: 'numeric',
+                      minute: '2-digit'
+                    })}
+                  </Typography>
+                </Box>
               )}
-            </div>
-          </div>
+            </Box>
+          </Box>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }

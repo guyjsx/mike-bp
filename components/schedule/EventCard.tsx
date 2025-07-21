@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { Event, Attendee } from '@/lib/types'
+import { Card, CardContent, Typography, Box, Chip, IconButton, Avatar, AvatarGroup } from '@mui/material'
+import { LocationOn, Map, Checkroom, AttachMoney, People, AccessTime } from '@mui/icons-material'
 
 interface EventCardProps {
   event: Event
@@ -29,84 +31,124 @@ export default function EventCard({ event, isAttending, isHighlighted = false, a
   const eventAttendees = attendees.filter(a => event.attendee_ids.includes(a.id))
 
   return (
-    <div className={`
-      bg-white rounded-lg shadow-sm border p-4 hover:shadow-md transition-shadow
-      ${isHighlighted ? 'ring-2 ring-primary-500 bg-primary-50' : ''}
-      ${!isAttending ? 'opacity-60' : ''}
-    `}>
-      <div className="flex justify-between items-start mb-2">
-        <div className="flex-1">
-          <h3 className="font-semibold text-gray-900">{event.title}</h3>
-          <p className="text-sm text-gray-600">{getTimeRange()}</p>
-        </div>
-        {!isAttending && (
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-            Not attending
-          </span>
-        )}
-      </div>
-
-      {event.location && (
-        <div className="flex items-center mb-2">
-          <span className="text-lg mr-2">📍</span>
-          <span className="text-sm text-gray-700">{event.location}</span>
-          {event.map_link && (
-            <Link
-              href={event.map_link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-2 text-primary-600 hover:text-primary-700"
-            >
-              <span className="text-lg">🗺️</span>
-            </Link>
+    <Card
+      sx={{
+        transition: 'all 0.2s ease-in-out',
+        '&:hover': {
+          boxShadow: 3
+        },
+        ...(isHighlighted && {
+          border: 2,
+          borderColor: 'primary.main',
+          bgcolor: 'primary.50'
+        }),
+        ...((!isAttending) && {
+          opacity: 0.6
+        })
+      }}
+    >
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary', mb: 0.5 }}>
+              {event.title}
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <AccessTime sx={{ fontSize: 16, color: 'text.secondary' }} />
+              <Typography variant="body2" color="text.secondary">
+                {getTimeRange()}
+              </Typography>
+            </Box>
+          </Box>
+          {!isAttending && (
+            <Chip
+              label="Not attending"
+              size="small"
+              variant="outlined"
+              sx={{ color: 'text.secondary' }}
+            />
           )}
-        </div>
-      )}
+        </Box>
 
-      {event.dress_code && (
-        <div className="flex items-center mb-2">
-          <span className="text-lg mr-2">👔</span>
-          <span className="text-sm text-gray-600">{event.dress_code}</span>
-        </div>
-      )}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+          {event.location && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <LocationOn sx={{ fontSize: 16, color: 'text.secondary' }} />
+              <Typography variant="body2" color="text.secondary">
+                {event.location}
+              </Typography>
+              {event.map_link && (
+                <IconButton
+                  component={Link}
+                  href={event.map_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  size="small"
+                  sx={{ color: 'primary.main' }}
+                >
+                  <Map sx={{ fontSize: 16 }} />
+                </IconButton>
+              )}
+            </Box>
+          )}
 
-      {event.cost_per_person && (
-        <div className="flex items-center mb-2">
-          <span className="text-lg mr-2">💰</span>
-          <span className="text-sm text-gray-600">${event.cost_per_person} per person</span>
-        </div>
-      )}
+          {event.dress_code && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Checkroom sx={{ fontSize: 16, color: 'text.secondary' }} />
+              <Typography variant="body2" color="text.secondary">
+                {event.dress_code}
+              </Typography>
+            </Box>
+          )}
 
-      {eventAttendees.length > 0 && (
-        <div className="flex items-center">
-          <span className="text-lg mr-2">👥</span>
-          <span className="text-sm text-gray-600">
-            {eventAttendees.length} attending
-          </span>
-          <div className="ml-2 flex -space-x-1 overflow-hidden">
-            {eventAttendees.slice(0, 3).map((attendee) => (
-              <div
-                key={attendee.id}
-                className="inline-block h-6 w-6 rounded-full bg-gray-300 text-xs flex items-center justify-center text-gray-700 font-medium border-2 border-white"
-                title={attendee.name}
+          {event.cost_per_person && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <AttachMoney sx={{ fontSize: 16, color: 'text.secondary' }} />
+              <Typography variant="body2" color="text.secondary">
+                ${event.cost_per_person} per person
+              </Typography>
+            </Box>
+          )}
+
+          {eventAttendees.length > 0 && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <People sx={{ fontSize: 16, color: 'text.secondary' }} />
+              <Typography variant="body2" color="text.secondary">
+                {eventAttendees.length} attending
+              </Typography>
+              <AvatarGroup
+                max={4}
+                sx={{
+                  '& .MuiAvatar-root': {
+                    width: 24,
+                    height: 24,
+                    fontSize: '0.75rem',
+                    bgcolor: 'primary.light',
+                    color: 'primary.contrastText'
+                  }
+                }}
               >
-                {attendee.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
-              </div>
-            ))}
-            {eventAttendees.length > 3 && (
-              <div className="inline-block h-6 w-6 rounded-full bg-gray-200 text-xs flex items-center justify-center text-gray-600 font-medium border-2 border-white">
-                +{eventAttendees.length - 3}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+                {eventAttendees.map((attendee) => (
+                  <Avatar
+                    key={attendee.id}
+                    title={attendee.name}
+                  >
+                    {attendee.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                  </Avatar>
+                ))}
+              </AvatarGroup>
+            </Box>
+          )}
+        </Box>
 
-      {event.notes && (
-        <div className="mt-3 pt-3 border-t border-gray-100">
-          <p className="text-sm text-gray-600">{event.notes}</p>
-        </div>
-      )}
-    </div>
+        {event.notes && (
+          <Box sx={{ mt: 2, pt: 2, borderTop: 1, borderColor: 'divider' }}>
+            <Typography variant="body2" color="text.secondary">
+              {event.notes}
+            </Typography>
+          </Box>
+        )}
+      </CardContent>
+    </Card>
   )
 }

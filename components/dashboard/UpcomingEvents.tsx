@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { Event } from '@/lib/types'
+import { Card, CardContent, Typography, Box, Chip, Button } from '@mui/material'
+import { Schedule, LocationOn, ArrowForward } from '@mui/icons-material'
 
 interface UpcomingEventsProps {
   events: Event[]
@@ -20,15 +22,6 @@ export default function UpcomingEvents({ events, attendeeId }: UpcomingEventsPro
     })
     .slice(0, 3)
 
-  if (upcomingEvents.length === 0) {
-    return (
-      <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-semibold mb-4">Upcoming Events</h3>
-        <p className="text-gray-500">No upcoming events</p>
-      </div>
-    )
-  }
-
   const formatEventTime = (event: Event) => {
     const date = new Date(`${event.day}T${event.start_time}`)
     const day = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
@@ -37,42 +30,81 @@ export default function UpcomingEvents({ events, attendeeId }: UpcomingEventsPro
   }
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <div className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Upcoming Events</h3>
-        <div className="space-y-4">
-          {upcomingEvents.map((event) => {
-            const isAttending = attendeeId ? event.attendee_ids.includes(attendeeId) : true
-            return (
-              <div key={event.id} className="flex items-start space-x-3">
-                <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                    <span className="text-lg">📅</span>
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">{event.title}</h4>
-                  <p className="text-sm text-gray-500">{formatEventTime(event)}</p>
-                  {event.location && (
-                    <p className="text-sm text-gray-500">📍 {event.location}</p>
-                  )}
-                  {!isAttending && attendeeId && (
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600 mt-1">
-                      Not attending
-                    </span>
-                  )}
-                </div>
-              </div>
-            )
-          })}
-        </div>
-        <Link
-          href="/schedule"
-          className="mt-4 block text-center text-sm text-primary-600 hover:text-primary-700 font-medium"
-        >
-          View full schedule →
-        </Link>
-      </div>
-    </div>
+    <Card>
+      <CardContent sx={{ p: 3 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
+          Upcoming Events
+        </Typography>
+        
+        {upcomingEvents.length === 0 ? (
+          <Box sx={{ textAlign: 'center', py: 4 }}>
+            <Schedule sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
+            <Typography color="text.secondary">
+              No upcoming events
+            </Typography>
+          </Box>
+        ) : (
+          <>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              {upcomingEvents.map((event) => {
+                const isAttending = attendeeId ? event.attendee_ids.includes(attendeeId) : true
+                return (
+                  <Box key={event.id} sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        backgroundColor: 'primary.light',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}
+                    >
+                      <Schedule sx={{ color: 'primary.main', fontSize: 20 }} />
+                    </Box>
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                        {event.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {formatEventTime(event)}
+                      </Typography>
+                      {event.location && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
+                          <LocationOn sx={{ fontSize: 14, mr: 0.5, color: 'text.secondary' }} />
+                          <Typography variant="caption" color="text.secondary">
+                            {event.location}
+                          </Typography>
+                        </Box>
+                      )}
+                      {!isAttending && attendeeId && (
+                        <Chip 
+                          label="Not attending" 
+                          size="small" 
+                          variant="outlined"
+                          sx={{ mt: 1 }}
+                        />
+                      )}
+                    </Box>
+                  </Box>
+                )
+              })}
+            </Box>
+            
+            <Button
+              component={Link}
+              href="/schedule"
+              endIcon={<ArrowForward />}
+              sx={{ mt: 3, width: '100%' }}
+              variant="text"
+            >
+              View full schedule
+            </Button>
+          </>
+        )}
+      </CardContent>
+    </Card>
   )
 }

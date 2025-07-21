@@ -4,12 +4,30 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Attendee } from '@/lib/types'
+import { 
+  Card, 
+  CardContent, 
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button, 
+  Typography, 
+  Box, 
+  Alert,
+  CircularProgress
+} from '@mui/material'
+import { GolfCourse, Person } from '@mui/icons-material'
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
 
 export default function SelectAttendeePage() {
   const [attendees, setAttendees] = useState<Attendee[]>([])
   const [selectedAttendeeId, setSelectedAttendeeId] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
@@ -25,10 +43,17 @@ export default function SelectAttendeePage() {
         .order('name')
 
       if (error) throw error
+      
+      console.log('Fetched attendees:', data) // Debug log
+      console.log('Supabase response:', { data, error }) // More debug info
       setAttendees(data || [])
+      
+      if (!data || data.length === 0) {
+        setError(`No attendees found. Please add attendees to your database. Response: ${JSON.stringify({ data, error })}`)
+      }
     } catch (err) {
       console.error('Error fetching attendees:', err)
-      setError('Failed to load attendees')
+      setError('Failed to load attendees. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -40,6 +65,7 @@ export default function SelectAttendeePage() {
     const selectedAttendee = attendees.find(a => a.id === selectedAttendeeId)
     if (!selectedAttendee) return
 
+    setSubmitting(true)
     try {
       const response = await fetch('/api/auth/select-attendee', {
         method: 'POST',
@@ -57,69 +83,107 @@ export default function SelectAttendeePage() {
       router.push('/dashboard')
     } catch (err) {
       setError('Failed to select attendee. Please try again.')
+      setSubmitting(false)
     }
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading attendees...</p>
-        </div>
-      </div>
+      <Box
+        sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          bgcolor: 'background.default',
+        }}
+      >
+        <Box sx={{ textAlign: 'center' }}>
+          <CircularProgress size={60} />
+          <Typography sx={{ mt: 2 }} color="text.secondary">
+            Loading attendees...
+          </Typography>
+        </Box>
+      </Box>
     )
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="text-center text-3xl font-bold text-gray-900">
-            Who are you?
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Select your name to continue
-          </p>
-        </div>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: 'background.default',
+        p: 3,
+      }}
+    >
+      <Card sx={{ maxWidth: 400, width: '100%' }}>
+        <CardContent sx={{ p: 4 }}>
+          <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <Person 
+              sx={{ 
+                fontSize: 60, 
+                color: 'primary.main', 
+                mb: 2 
+              }} 
+            />
+            <Typography 
+              variant="h4" 
+              component="h1" 
+              sx={{ 
+                fontWeight: 700, 
+                color: 'text.primary',
+                mb: 1
+              }}
+            >
+              Who are you?
+            </Typography>
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+            >
+              Select your name to continue
+            </Typography>
+          </Box>
 
-        <div className="mt-8 space-y-6">
           {error && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="text-sm text-red-800">{error}</div>
-            </div>
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
           )}
 
-          <div>
-            <label htmlFor="attendee" className="block text-sm font-medium text-gray-700">
-              Select your name
-            </label>
-            <select
-              id="attendee"
-              name="attendee"
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
+          <FormControl fullWidth sx={{ mb: 3 }}>
+            <InputLabel id="attendee-select-label">Select your name</InputLabel>
+            <Select
+              labelId="attendee-select-label"
               value={selectedAttendeeId}
+              label="Select your name"
               onChange={(e) => setSelectedAttendeeId(e.target.value)}
+              disabled={submitting}
             >
-              <option value="">Choose...</option>
               {attendees.map((attendee) => (
-                <option key={attendee.id} value={attendee.id}>
+                <MenuItem key={attendee.id} value={attendee.id}>
                   {attendee.name}
-                </option>
+                </MenuItem>
               ))}
-            </select>
-          </div>
+            </Select>
+          </FormControl>
 
-          <button
-            type="button"
+          <Button
+            fullWidth
+            variant="contained"
+            size="large"
             onClick={handleContinue}
-            disabled={!selectedAttendeeId}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!selectedAttendeeId || submitting}
+            startIcon={submitting ? <CircularProgress size={20} /> : <GolfCourse />}
+            sx={{ py: 1.5 }}
           >
-            Continue
-          </button>
-        </div>
-      </div>
-    </div>
+            {submitting ? 'Setting up...' : 'Continue'}
+          </Button>
+        </CardContent>
+      </Card>
+    </Box>
   )
 }

@@ -1,4 +1,6 @@
 import { Expense, Attendee } from '@/lib/types'
+import { Card, CardContent, Typography, Box, Chip, Divider } from '@mui/material'
+import { AttachMoney, Hotel, Restaurant, DirectionsCar, SportsGolf, Description } from '@mui/icons-material'
 
 interface ExpenseListProps {
   expenses: Expense[]
@@ -34,104 +36,125 @@ export default function ExpenseList({ expenses, attendees, currentUserId }: Expe
     return groups
   }, {} as { [key: string]: Expense[] })
 
-  const categoryIcons: { [key: string]: string } = {
-    'Accommodation': '🏨',
-    'Food': '🍽️',
-    'Activities': '🎯',
-    'Transportation': '🚗',
-    'Other': '📝'
+  const categoryIcons: { [key: string]: any } = {
+    'Accommodation': <Hotel />,
+    'Food': <Restaurant />,
+    'Activities': <SportsGolf />,
+    'Transportation': <DirectionsCar />,
+    'Other': <Description />
   }
 
   if (expenses.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow border p-6">
-        <div className="text-center py-8">
-          <span className="text-6xl">💰</span>
-          <h3 className="text-lg font-medium text-gray-900 mt-4">No Expenses Yet</h3>
-          <p className="text-gray-500 mt-2">Expenses will appear here as they&apos;re added</p>
-        </div>
-      </div>
+      <Card>
+        <CardContent sx={{ p: 3 }}>
+          <Box sx={{ textAlign: 'center', py: 8 }}>
+            <AttachMoney sx={{ fontSize: 80, color: 'primary.light', mb: 2 }} />
+            <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary', mb: 1 }}>
+              No Expenses Yet
+            </Typography>
+            <Typography color="text.secondary">
+              Expenses will appear here as they're added
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       {Object.entries(groupedExpenses).map(([category, categoryExpenses]) => (
-        <div key={category} className="bg-white rounded-lg shadow border">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-              <span className="text-2xl mr-2">{categoryIcons[category] || '📝'}</span>
-              {category}
-              <span className="ml-2 text-sm font-normal text-gray-500">
-                ({categoryExpenses.length} expense{categoryExpenses.length !== 1 ? 's' : ''})
-              </span>
-            </h3>
-          </div>
-          
-          <div className="divide-y divide-gray-200">
-            {categoryExpenses.map((expense) => {
-              const paidBy = getAttendee(expense.paid_by_id)
-              const userShare = calculateUserShare(expense)
-              const isUserPayer = expense.paid_by_id === currentUserId
-              const splitCount = expense.split_between_ids.length
-              
-              return (
-                <div key={expense.id} className="px-6 py-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-900">{expense.title}</h4>
-                      <div className="mt-1 text-sm text-gray-600">
-                        <p>Paid by {paidBy?.name || 'Unknown'}</p>
-                        <p>Split {splitCount} way{splitCount !== 1 ? 's' : ''} ({expense.split_type})</p>
-                      </div>
-                      {expense.notes && (
-                        <p className="mt-2 text-sm text-gray-500">{expense.notes}</p>
-                      )}
-                    </div>
-                    
-                    <div className="text-right ml-4">
-                      <div className="text-xl font-bold text-gray-900">
-                        ${expense.total_amount.toFixed(2)}
-                      </div>
-                      {currentUserId && expense.split_between_ids.includes(currentUserId) && (
-                        <div className={`text-sm mt-1 ${
-                          isUserPayer ? 'text-green-600' : 'text-red-600'
-                        }`}>
-                          {isUserPayer 
-                            ? `+$${(expense.total_amount - userShare).toFixed(2)} (you're owed)`
-                            : `-$${userShare.toFixed(2)} (your share)`
-                          }
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {/* Show who's splitting this expense */}
-                  <div className="mt-3 flex flex-wrap gap-1">
-                    {expense.split_between_ids.map(attendeeId => {
-                      const attendee = getAttendee(attendeeId)
-                      if (!attendee) return null
+        <Card key={category}>
+          <CardContent sx={{ p: 0 }}>
+            <Box sx={{ px: 3, py: 2, borderBottom: 1, borderColor: 'divider' }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
+                {categoryIcons[category] || <Description />}
+                {category}
+                <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
+                  ({categoryExpenses.length} expense{categoryExpenses.length !== 1 ? 's' : ''})
+                </Typography>
+              </Typography>
+            </Box>
+            
+            <Box>
+              {categoryExpenses.map((expense, index) => {
+                const paidBy = getAttendee(expense.paid_by_id)
+                const userShare = calculateUserShare(expense)
+                const isUserPayer = expense.paid_by_id === currentUserId
+                const splitCount = expense.split_between_ids.length
+                
+                return (
+                  <Box key={expense.id}>
+                    <Box sx={{ px: 3, py: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <Box sx={{ flexGrow: 1 }}>
+                          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
+                            {expense.title}
+                          </Typography>
+                          <Box sx={{ mb: 1 }}>
+                            <Typography variant="body2" color="text.secondary">
+                              Paid by {paidBy?.name || 'Unknown'}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Split {splitCount} way{splitCount !== 1 ? 's' : ''} ({expense.split_type})
+                            </Typography>
+                          </Box>
+                          {expense.notes && (
+                            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                              {expense.notes}
+                            </Typography>
+                          )}
+                        </Box>
+                        
+                        <Box sx={{ textAlign: 'right', ml: 2 }}>
+                          <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                            ${expense.total_amount.toFixed(2)}
+                          </Typography>
+                          {currentUserId && expense.split_between_ids.includes(currentUserId) && (
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                mt: 0.5,
+                                color: isUserPayer ? 'success.main' : 'error.main',
+                                fontWeight: 500
+                              }}
+                            >
+                              {isUserPayer 
+                                ? `+$${(expense.total_amount - userShare).toFixed(2)} (you're owed)`
+                                : `-$${userShare.toFixed(2)} (your share)`
+                              }
+                            </Typography>
+                          )}
+                        </Box>
+                      </Box>
                       
-                      return (
-                        <span
-                          key={attendeeId}
-                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                            attendeeId === currentUserId
-                              ? 'bg-primary-100 text-primary-800'
-                              : 'bg-gray-100 text-gray-600'
-                          }`}
-                        >
-                          {attendee.name}
-                        </span>
-                      )
-                    })}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
+                      {/* Show who's splitting this expense */}
+                      <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {expense.split_between_ids.map(attendeeId => {
+                          const attendee = getAttendee(attendeeId)
+                          if (!attendee) return null
+                          
+                          return (
+                            <Chip
+                              key={attendeeId}
+                              label={attendee.name}
+                              size="small"
+                              color={attendeeId === currentUserId ? 'primary' : 'default'}
+                              variant={attendeeId === currentUserId ? 'filled' : 'outlined'}
+                            />
+                          )
+                        })}
+                      </Box>
+                    </Box>
+                    {index < categoryExpenses.length - 1 && <Divider />}
+                  </Box>
+                )
+              })}
+            </Box>
+          </CardContent>
+        </Card>
       ))}
-    </div>
+    </Box>
   )
 }
