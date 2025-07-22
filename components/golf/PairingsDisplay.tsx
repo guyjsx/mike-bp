@@ -1,5 +1,6 @@
 import { GolfPairing, Attendee } from '@/lib/types'
-import { Card, CardContent, Typography, Box, Chip, Avatar, Grid, Alert } from '@mui/material'
+import { Card, CardContent, Typography, Box, Chip, Avatar, Alert } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import { GolfCourse, Phone, Warning } from '@mui/icons-material'
 
 interface PairingsDisplayProps {
@@ -66,7 +67,7 @@ export default function PairingsDisplay({ pairings, attendees, currentUserId }: 
 
               <Grid container spacing={2}>
                 {groupAttendees.map((attendee) => (
-                  <Grid item xs={12} sm={6} lg={3} key={attendee.id}>
+                  <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={attendee.id}>
                     <Card
                       variant="outlined"
                       sx={{

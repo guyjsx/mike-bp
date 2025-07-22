@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Expense, ExpensePayment, Attendee } from '@/lib/types'
 import ExpenseSummary from '@/components/expenses/ExpenseSummary'
@@ -16,23 +16,7 @@ export default function ExpensesPage() {
 
   const supabase = createClient()
 
-  useEffect(() => {
-    fetchData()
-    // Get current user from session
-    const sessionData = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('auth-session='))
-    if (sessionData) {
-      try {
-        const session = JSON.parse(decodeURIComponent(sessionData.split('=')[1]))
-        setAttendeeId(session.attendeeId)
-      } catch (e) {
-        // Handle parsing error
-      }
-    }
-  }, [])
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const [expensesResult, paymentsResult, attendeesResult] = await Promise.all([
         supabase.from('expenses').select('*').order('created_at', { ascending: false }),
@@ -48,7 +32,23 @@ export default function ExpensesPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [supabase])
+
+  useEffect(() => {
+    fetchData()
+    // Get current user from session
+    const sessionData = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('auth-session='))
+    if (sessionData) {
+      try {
+        const session = JSON.parse(decodeURIComponent(sessionData.split('=')[1]))
+        setAttendeeId(session.attendeeId)
+      } catch (e) {
+        // Handle parsing error
+      }
+    }
+  }, [fetchData])
 
   if (loading) {
     return (

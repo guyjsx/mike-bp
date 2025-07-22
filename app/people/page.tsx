@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Attendee } from '@/lib/types'
 import AttendeeGrid from '@/components/people/AttendeeGrid'
@@ -11,6 +11,22 @@ export default function PeoplePage() {
   const [attendeeId, setAttendeeId] = useState<string | undefined>()
 
   const supabase = createClient()
+
+  const fetchAttendees = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('attendees')
+        .select('*')
+        .order('name')
+
+      if (error) throw error
+      setAttendees(data || [])
+    } catch (error) {
+      console.error('Error fetching attendees:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [supabase])
 
   useEffect(() => {
     fetchAttendees()
@@ -26,23 +42,7 @@ export default function PeoplePage() {
         // Handle parsing error
       }
     }
-  }, [])
-
-  const fetchAttendees = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('attendees')
-        .select('*')
-        .order('name')
-
-      if (error) throw error
-      setAttendees(data || [])
-    } catch (error) {
-      console.error('Error fetching attendees:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+  }, [fetchAttendees])
 
   if (loading) {
     return (

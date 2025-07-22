@@ -7,7 +7,15 @@ export async function POST(request: NextRequest) {
 
     const verifiedRole = await verifyPassword(password)
 
-    if (!verifiedRole || verifiedRole !== role) {
+    if (!verifiedRole) {
+      return NextResponse.json(
+        { error: 'Invalid password' },
+        { status: 401 }
+      )
+    }
+
+    // If role is provided, verify it matches the password
+    if (role && verifiedRole !== role) {
       return NextResponse.json(
         { error: 'Invalid password' },
         { status: 401 }
@@ -18,6 +26,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, role: verifiedRole })
   } catch (error) {
+    console.error('Login API error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -1,6 +1,7 @@
 import { Attendee } from '@/lib/types'
 import AttendeeCard from './AttendeeCard'
-import { Box, Typography, Card, CardContent, Grid } from '@mui/material'
+import { Box, Typography, Card, CardContent } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import { People, GolfCourse, Restaurant } from '@mui/icons-material'
 
 interface AttendeeGridProps {
@@ -41,7 +42,7 @@ export default function AttendeeGrid({ attendees, currentUserId }: AttendeeGridP
             Group Stats
           </Typography>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <Card sx={{ textAlign: 'center', p: 3, bgcolor: 'primary.50' }}>
                 <People sx={{ fontSize: 32, color: 'primary.main', mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 700, color: 'primary.main' }}>
@@ -52,7 +53,7 @@ export default function AttendeeGrid({ attendees, currentUserId }: AttendeeGridP
                 </Typography>
               </Card>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <Card sx={{ textAlign: 'center', p: 3, bgcolor: 'success.50' }}>
                 <GolfCourse sx={{ fontSize: 32, color: 'success.main', mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 700, color: 'success.main' }}>
@@ -63,7 +64,7 @@ export default function AttendeeGrid({ attendees, currentUserId }: AttendeeGridP
                 </Typography>
               </Card>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <Card sx={{ textAlign: 'center', p: 3, bgcolor: 'secondary.50' }}>
                 <Restaurant sx={{ fontSize: 32, color: 'secondary.main', mb: 1 }} />
                 <Typography variant="h4" sx={{ fontWeight: 700, color: 'secondary.main' }}>
@@ -81,7 +82,7 @@ export default function AttendeeGrid({ attendees, currentUserId }: AttendeeGridP
       {/* Attendee cards */}
       <Grid container spacing={3}>
         {sortedAttendees.map((attendee) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={attendee.id}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={attendee.id}>
             <AttendeeCard
               attendee={attendee}
               isCurrentUser={attendee.id === currentUserId}

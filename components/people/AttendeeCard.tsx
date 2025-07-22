@@ -1,6 +1,6 @@
 import { Attendee } from '@/lib/types'
 import { Card, CardContent, Typography, Box, Avatar, Chip, IconButton, Divider } from '@mui/material'
-import { Phone, GolfCourse, AttachMoney, Restaurant, Emergency, FlightTakeoff, FlightLand, ContentCopy } from '@mui/icons-material'
+import { Phone, GolfCourse, AttachMoney, Restaurant, LocalHospital, FlightTakeoff, FlightLand, ContentCopy } from '@mui/icons-material'
 
 interface AttendeeCardProps {
   attendee: Attendee
@@ -105,7 +105,7 @@ export default function AttendeeCard({ attendee, isCurrentUser = false }: Attend
           
           {attendee.emergency_contact && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Emergency sx={{ fontSize: 18, color: 'text.secondary' }} />
+              <LocalHospital sx={{ fontSize: 18, color: 'text.secondary' }} />
               <Typography variant="body2" color="text.secondary">
                 {attendee.emergency_contact}
               </Typography>

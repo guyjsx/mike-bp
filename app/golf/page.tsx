@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { GolfRound, GolfPairing, Attendee } from '@/lib/types'
 import TeeTimeCard from '@/components/golf/TeeTimeCard'
@@ -18,23 +18,7 @@ export default function GolfPage() {
 
   const supabase = createClient()
 
-  useEffect(() => {
-    fetchData()
-    // Get current user from session
-    const sessionData = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('auth-session='))
-    if (sessionData) {
-      try {
-        const session = JSON.parse(decodeURIComponent(sessionData.split('=')[1]))
-        setAttendeeId(session.attendeeId)
-      } catch (e) {
-        // Handle parsing error
-      }
-    }
-  }, [])
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const [roundsResult, pairingsResult, attendeesResult] = await Promise.all([
         supabase.from('golf_rounds').select('*').order('day').order('tee_time'),
@@ -55,7 +39,23 @@ export default function GolfPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [supabase, selectedRound])
+
+  useEffect(() => {
+    fetchData()
+    // Get current user from session
+    const sessionData = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('auth-session='))
+    if (sessionData) {
+      try {
+        const session = JSON.parse(decodeURIComponent(sessionData.split('=')[1]))
+        setAttendeeId(session.attendeeId)
+      } catch (e) {
+        // Handle parsing error
+      }
+    }
+  }, [fetchData])
 
   const selectedRoundData = rounds.find(r => r.id === selectedRound)
   const selectedRoundPairings = pairings.filter(p => p.round_id === selectedRound)

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Attendee } from '@/lib/types'
@@ -31,11 +31,7 @@ export default function SelectAttendeePage() {
   const router = useRouter()
   const supabase = createClient()
 
-  useEffect(() => {
-    fetchAttendees()
-  }, [])
-
-  const fetchAttendees = async () => {
+  const fetchAttendees = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('attendees')
@@ -57,7 +53,11 @@ export default function SelectAttendeePage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [supabase])
+
+  useEffect(() => {
+    fetchAttendees()
+  }, [fetchAttendees])
 
   const handleContinue = async () => {
     if (!selectedAttendeeId) return

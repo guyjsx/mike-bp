@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Event, Attendee } from '@/lib/types'
 import { Box, Typography, Card, CircularProgress } from '@mui/material'
@@ -17,6 +17,22 @@ export default function SchedulePage() {
   
   const supabase = createClient()
 
+  const fetchData = useCallback(async () => {
+    try {
+      const [eventsResult, attendeesResult] = await Promise.all([
+        supabase.from('events').select('*').order('day').order('start_time'),
+        supabase.from('attendees').select('*').order('name')
+      ])
+
+      if (eventsResult.data) setEvents(eventsResult.data)
+      if (attendeesResult.data) setAttendees(attendeesResult.data)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [supabase])
+
   useEffect(() => {
     fetchData()
     // Get current user from session storage or cookie
@@ -32,23 +48,7 @@ export default function SchedulePage() {
         // Handle parsing error
       }
     }
-  }, [])
-
-  const fetchData = async () => {
-    try {
-      const [eventsResult, attendeesResult] = await Promise.all([
-        supabase.from('events').select('*').order('day').order('start_time'),
-        supabase.from('attendees').select('*').order('name')
-      ])
-
-      if (eventsResult.data) setEvents(eventsResult.data)
-      if (attendeesResult.data) setAttendees(attendeesResult.data)
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+  }, [fetchData])
 
   const filteredEvents = events.filter(event => event.day === selectedDay)
   

@@ -1,5 +1,6 @@
 import { Expense, ExpensePayment } from '@/lib/types'
-import { Card, CardContent, Typography, Box, Grid, Alert } from '@mui/material'
+import { Card, CardContent, Typography, Box, Alert } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import { AttachMoney, CheckCircle, Schedule, Person, AccountBalance, CreditCard } from '@mui/icons-material'
 
 interface ExpenseSummaryProps {
@@ -35,7 +36,7 @@ export default function ExpenseSummary({ expenses, payments, currentUserId }: Ex
         </Box>
         
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={6} lg={3}>
+          <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
             <Card sx={{ textAlign: 'center', p: 2, bgcolor: 'primary.50' }}>
               <AttachMoney sx={{ fontSize: 32, color: 'primary.main', mb: 1 }} />
               <Typography variant="h5" sx={{ fontWeight: 700, color: 'primary.main' }}>
@@ -47,7 +48,7 @@ export default function ExpenseSummary({ expenses, payments, currentUserId }: Ex
             </Card>
           </Grid>
           
-          <Grid item xs={12} sm={6} lg={3}>
+          <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
             <Card sx={{ textAlign: 'center', p: 2, bgcolor: 'success.50' }}>
               <CheckCircle sx={{ fontSize: 32, color: 'success.main', mb: 1 }} />
               <Typography variant="h5" sx={{ fontWeight: 700, color: 'success.main' }}>
@@ -59,7 +60,7 @@ export default function ExpenseSummary({ expenses, payments, currentUserId }: Ex
             </Card>
           </Grid>
           
-          <Grid item xs={12} sm={6} lg={3}>
+          <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
             <Card sx={{ textAlign: 'center', p: 2, bgcolor: 'warning.50' }}>
               <Schedule sx={{ fontSize: 32, color: 'warning.main', mb: 1 }} />
               <Typography variant="h5" sx={{ fontWeight: 700, color: 'warning.main' }}>
@@ -72,7 +73,7 @@ export default function ExpenseSummary({ expenses, payments, currentUserId }: Ex
           </Grid>
           
           {currentUserId && (
-            <Grid item xs={12} sm={6} lg={3}>
+            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
               <Card sx={{ textAlign: 'center', p: 2, bgcolor: 'secondary.50' }}>
                 <Person sx={{ fontSize: 32, color: 'secondary.main', mb: 1 }} />
                 <Typography variant="h5" sx={{ fontWeight: 700, color: 'secondary.main' }}>
@@ -89,7 +90,7 @@ export default function ExpenseSummary({ expenses, payments, currentUserId }: Ex
         {currentUserId && (
           <Box sx={{ mt: 4, pt: 3, borderTop: 1, borderColor: 'divider' }}>
             <Grid container spacing={3}>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                   <CreditCard sx={{ fontSize: 20, color: 'text.secondary' }} />
                   <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
@@ -100,7 +101,7 @@ export default function ExpenseSummary({ expenses, payments, currentUserId }: Ex
                   ${userPaidAmount.toFixed(2)}
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                   <AccountBalance sx={{ fontSize: 20, color: 'text.secondary' }} />
                   <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>

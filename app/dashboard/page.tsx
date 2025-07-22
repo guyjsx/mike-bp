@@ -1,6 +1,7 @@
 import { getAuthSession } from '@/lib/auth'
 import { createClient } from '@/lib/supabase/server'
-import { Typography, Box, Grid, Card, CardContent, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import { Typography, Box, Card, CardContent, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import { Phone, Directions } from '@mui/icons-material'
 import CountdownTimer from '@/components/dashboard/CountdownTimer'
 import QuickStats from '@/components/dashboard/QuickStats'
@@ -17,13 +18,15 @@ export default async function DashboardPage() {
     { data: events },
     { data: rooms },
     { data: expenses },
-    { data: payments }
+    { data: payments },
+    { data: golfPairings }
   ] = await Promise.all([
     supabase.from('announcements').select('*').eq('is_active', true),
     supabase.from('events').select('*'),
     supabase.from('rooms').select('*'),
     supabase.from('expenses').select('*'),
-    supabase.from('expense_payments').select('*')
+    supabase.from('expense_payments').select('*'),
+    supabase.from('golf_pairings').select('*')
   ])
 
   // Calculate amount owed for attendee
@@ -67,6 +70,7 @@ export default async function DashboardPage() {
 
       <QuickStats
         room={userRoom}
+        golfGroups={golfPairings?.filter(p => session?.attendeeId && p.attendee_ids.includes(session.attendeeId)) || []}
         amountOwed={amountOwed}
         nextEvent={nextEvent ? {
           title: nextEvent.title,
@@ -75,14 +79,14 @@ export default async function DashboardPage() {
       />
 
       <Grid container spacing={3}>
-        <Grid item xs={12} lg={6}>
+        <Grid size={{ xs: 12, lg: 6 }}>
           <UpcomingEvents 
             events={events || []} 
             attendeeId={session?.attendeeId}
           />
         </Grid>
         
-        <Grid item xs={12} lg={6}>
+        <Grid size={{ xs: 12, lg: 6 }}>
           <Card>
             <CardContent sx={{ p: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>

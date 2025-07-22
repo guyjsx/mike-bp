@@ -21,28 +21,29 @@ export default function TeeTimeCard({ round }: TeeTimeCardProps) {
   }
 
   return (
-    <Card sx={{ height: '100%' }}>
-      <CardContent sx={{ p: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 3 }}>
-          <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-              <GolfCourse sx={{ color: 'primary.main' }} />
-              <Typography variant="h5" sx={{ fontWeight: 700, color: 'text.primary' }}>
+    <Card className="tee-time" sx={{ height: '100%' }}>
+      <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
+          <Box sx={{ flex: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+              <GolfCourse sx={{ color: 'primary.main', fontSize: 20 }} />
+              <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary', fontSize: { xs: '1rem', md: '1.25rem' } }}>
                 {round.course_name}
               </Typography>
             </Box>
-            <Typography color="text.secondary">
+            <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem' }}>
               {formatDate(round.day)}
             </Typography>
           </Box>
-          <Box sx={{ textAlign: 'right' }}>
+          <Box sx={{ textAlign: 'right', ml: 2 }}>
             <Chip
-              icon={<AccessTime />}
+              icon={<AccessTime sx={{ fontSize: 16 }} />}
               label={formatTime(round.tee_time)}
+              size="small"
               sx={{
-                fontSize: '1.125rem',
-                fontWeight: 700,
-                height: 40,
+                fontSize: '0.875rem',
+                fontWeight: 600,
+                height: 32,
                 bgcolor: 'primary.main',
                 color: 'primary.contrastText',
                 '& .MuiChip-icon': {
@@ -50,17 +51,17 @@ export default function TeeTimeCard({ round }: TeeTimeCardProps) {
                 }
               }}
             />
-            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.25, fontSize: '0.75rem' }}>
               Tee Time
             </Typography>
           </Box>
         </Box>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Box sx={{ display: 'grid', gap: 1.5 }}>
           {round.course_address && (
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-              <LocationOn sx={{ fontSize: 20, color: 'text.secondary', mt: 0.25 }} />
-              <Typography color="text.secondary">
+              <LocationOn sx={{ fontSize: 16, color: 'text.secondary', mt: 0.25 }} />
+              <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem' }}>
                 {round.course_address}
               </Typography>
             </Box>
@@ -68,14 +69,16 @@ export default function TeeTimeCard({ round }: TeeTimeCardProps) {
 
           {round.course_phone && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Phone sx={{ fontSize: 20, color: 'text.secondary' }} />
+              <Phone sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography
                 component="a"
                 href={`tel:${round.course_phone}`}
+                variant="body2"
                 sx={{
                   color: 'primary.main',
                   textDecoration: 'none',
                   fontWeight: 500,
+                  fontSize: '0.875rem',
                   '&:hover': {
                     textDecoration: 'underline'
                   }
@@ -88,8 +91,8 @@ export default function TeeTimeCard({ round }: TeeTimeCardProps) {
 
           {round.dress_code && (
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-              <Checkroom sx={{ fontSize: 20, color: 'text.secondary', mt: 0.25 }} />
-              <Typography color="text.secondary">
+              <Checkroom sx={{ fontSize: 16, color: 'text.secondary', mt: 0.25 }} />
+              <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem' }}>
                 {round.dress_code}
               </Typography>
             </Box>
@@ -97,8 +100,8 @@ export default function TeeTimeCard({ round }: TeeTimeCardProps) {
         </Box>
 
         {round.notes && (
-          <Box sx={{ mt: 3, pt: 3, borderTop: 1, borderColor: 'divider' }}>
-            <Typography color="text.secondary">
+          <Box sx={{ mt: 2, pt: 2, borderTop: 1, borderColor: 'divider' }}>
+            <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem' }}>
               {round.notes}
             </Typography>
           </Box>

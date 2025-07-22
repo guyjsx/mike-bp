@@ -1,0 +1,571 @@
+/* Masters-inspired Golf Theme CSS */
+
+:root {
+  --font-inter: 'Inter', sans-serif;
+  --font-playfair: 'Playfair Display', serif;
+  
+  /* Masters Color Palette */
+  --augusta-green-50: #f0f7f0;
+  --augusta-green-100: #e0f0e0;
+  --augusta-green-200: #b8d8b8;
+  --augusta-green-300: #8fc28f;
+  --augusta-green-400: #5fa55f;
+  --augusta-green-500: #1b5e20;
+  --augusta-green-600: #164e1b;
+  --augusta-green-700: #0f3d13;
+  --augusta-green-800: #0a2d0c;
+  --augusta-green-900: #051d06;
+  
+  --masters-gold-50: #fefef9;
+  --masters-gold-100: #fefcf4;
+  --masters-gold-200: #fdf7e3;
+  --masters-gold-300: #fbf0c9;
+  --masters-gold-400: #f7e199;
+  --masters-gold-500: #d4af37;
+  --masters-gold-600: #b8941f;
+  --masters-gold-700: #9c7a1a;
+  --masters-gold-800: #806115;
+  --masters-gold-900: #644710;
+}
+
+/* Golf-themed animations */
+@keyframes golfSwing {
+  0% { transform: rotate(-15deg); }
+  50% { transform: rotate(5deg); }
+  100% { transform: rotate(-15deg); }
+}
+
+@keyframes golfBallRoll {
+  0% { transform: translateX(-100px) rotate(0deg); }
+  100% { transform: translateX(100px) rotate(360deg); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scoreboardFlip {
+  0%, 50% { transform: rotateX(0deg); }
+  25% { transform: rotateX(-90deg); }
+  75% { transform: rotateX(90deg); }
+  100% { transform: rotateX(0deg); }
+}
+
+/* Premium card styling */
+.golf-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+  border: 1px solid rgba(27, 94, 32, 0.1);
+  border-radius: 16px;
+  box-shadow: 
+    0 4px 16px 0 rgba(27, 94, 32, 0.08),
+    0 2px 8px 0 rgba(27, 94, 32, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.golf-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 8px 32px 0 rgba(27, 94, 32, 0.12),
+    0 4px 16px 0 rgba(27, 94, 32, 0.08);
+  border-color: rgba(27, 94, 32, 0.2);
+}
+
+/* Golf scorecard styling */
+.scorecard {
+  background: linear-gradient(135deg, #fefefe 0%, #f9fcf9 100%);
+  border: 2px solid var(--augusta-green-200);
+  border-radius: 12px;
+  font-family: 'Courier New', monospace;
+  padding: 20px;
+  position: relative;
+}
+
+.scorecard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--augusta-green-500) 0%, var(--masters-gold-500) 100%);
+  border-radius: 12px 12px 0 0;
+}
+
+/* Tee time styling */
+.tee-time {
+  background: linear-gradient(135deg, var(--augusta-green-50) 0%, #ffffff 100%);
+  border-left: 4px solid var(--augusta-green-500);
+  padding: 16px 20px;
+  border-radius: 0 12px 12px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.tee-time::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.1) 100%);
+  pointer-events: none;
+}
+
+/* Premium button styling */
+.golf-button-primary {
+  background: linear-gradient(135deg, var(--augusta-green-500) 0%, var(--augusta-green-600) 100%);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-family: var(--font-inter);
+  font-weight: 600;
+  padding: 12px 24px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.golf-button-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.golf-button-primary:hover::before {
+  left: 100%;
+}
+
+.golf-button-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px 0 rgba(27, 94, 32, 0.3);
+}
+
+/* Leaderboard styling */
+.leaderboard {
+  background: linear-gradient(135deg, #ffffff 0%, var(--augusta-green-50) 100%);
+  border: 1px solid var(--augusta-green-200);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.leaderboard-header {
+  background: linear-gradient(135deg, var(--augusta-green-500) 0%, var(--augusta-green-600) 100%);
+  color: white;
+  padding: 16px 24px;
+  font-family: var(--font-playfair);
+  font-weight: 600;
+  text-align: center;
+}
+
+.leaderboard-row {
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--augusta-green-100);
+  transition: background-color 0.2s ease;
+}
+
+.leaderboard-row:hover {
+  background-color: var(--augusta-green-50);
+}
+
+.leaderboard-row:last-child {
+  border-bottom: none;
+}
+
+/* Golf hole indicator */
+.hole-indicator {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--augusta-green-500) 0%, var(--augusta-green-600) 100%);
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(27, 94, 32, 0.3);
+  position: relative;
+}
+
+.hole-indicator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Golf ball with dimples */
+.golf-ball {
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.golf-ball::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  border-radius: 50%;
+  background-image: 
+    radial-gradient(circle at 4px 4px, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 12px 8px, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 8px 14px, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 16px 16px, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+  background-size: 8px 8px, 10px 10px, 12px 12px, 8px 8px;
+  background-position: 0 0, 3px 3px, 6px 6px, 2px 8px;
+}
+
+/* Golf tee */
+.golf-tee {
+  width: 8px;
+  height: 32px;
+  background: linear-gradient(180deg, #8B4513 0%, #D2691E  20%, #8B4513 100%);
+  border-radius: 4px 4px 1px 1px;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.golf-tee::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 6px;
+  background: #8B4513;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Golf club */
+.golf-club {
+  width: 2px;
+  height: 40px;
+  background: linear-gradient(180deg, #C0C0C0 0%, #808080 100%);
+  border-radius: 1px;
+  position: relative;
+}
+
+.golf-club::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: -4px;
+  width: 10px;
+  height: 8px;
+  background: linear-gradient(135deg, #C0C0C0 0%, #A0A0A0 100%);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Casino Elements */
+
+/* Playing card */
+.playing-card {
+  width: 20px;
+  height: 28px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+  border: 1px solid #e0e0e0;
+  border-radius: 3px;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.playing-card::before {
+  content: '♠';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  font-size: 8px;
+  color: #333;
+  line-height: 1;
+}
+
+.playing-card.red::before {
+  content: '♥';
+  color: #d32f2f;
+}
+
+.playing-card.diamond::before {
+  content: '♦';
+  color: #d32f2f;
+}
+
+.playing-card.club::before {
+  content: '♣';
+  color: #333;
+}
+
+/* Casino chip */
+.casino-chip {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  position: relative;
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.casino-chip::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+}
+
+.casino-chip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+}
+
+.casino-chip.green {
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+}
+
+.casino-chip.blue {
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+}
+
+.casino-chip.black {
+  background: linear-gradient(135deg, #424242 0%, #212121 100%);
+}
+
+/* Dice */
+.dice {
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.dice::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3px;
+  height: 3px;
+  background: #333;
+  border-radius: 50%;
+  box-shadow: 
+    -5px -5px 0 #333,
+    5px 5px 0 #333;
+}
+
+/* Slot machine style */
+.slot-reel {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA000 100%);
+  border: 2px solid #B8860B;
+  border-radius: 8px;
+  padding: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.slot-reel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%),
+    linear-gradient(-45deg, transparent 40%, rgba(0, 0, 0, 0.05) 50%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Roulette wheel */
+.roulette-wheel {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 50%, #d32f2f 50%, #b71c1c 100%);
+  border: 2px solid #FFD700;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.roulette-wheel::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: #FFD700;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #333;
+}
+
+/* Pin flag styling */
+.pin-flag {
+  width: 3px;
+  height: 24px;
+  background: var(--augusta-green-700);
+  position: relative;
+  margin: 0 auto;
+}
+
+.pin-flag::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 16px;
+  height: 8px;
+  background: linear-gradient(135deg, var(--masters-gold-500) 0%, var(--masters-gold-600) 100%);
+  clip-path: polygon(0 0, 100% 0, 85% 50%, 100% 100%, 0 100%);
+}
+
+/* Safe area support for mobile devices */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .golf-card {
+    margin: 8px 0;
+    border-radius: 12px;
+  }
+  
+  .scorecard {
+    padding: 16px;
+    border-radius: 8px;
+  }
+  
+  .tee-time {
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+  }
+  
+  .golf-button-primary {
+    padding: 14px 20px;
+    font-size: 16px; /* Better touch target */
+    min-height: 44px; /* iOS recommended touch target */
+  }
+  
+  /* Larger touch targets for mobile */
+  .MuiBottomNavigationAction-root {
+    min-height: 64px !important;
+    padding: 8px 4px !important;
+  }
+  
+  /* Better spacing for mobile cards */
+  .MuiCard-root {
+    margin-bottom: 16px;
+  }
+  
+  /* Responsive typography for mobile */
+  .tournament-title {
+    font-size: 1.5rem !important;
+    line-height: 1.2 !important;
+  }
+}
+
+/* Touch-friendly hover states for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .golf-card:hover {
+    transform: none;
+  }
+  
+  .golf-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  .golf-button-primary:hover {
+    transform: none;
+  }
+  
+  .golf-button-primary:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Golf course gradient backgrounds */
+.fairway-gradient {
+  background: linear-gradient(135deg, var(--augusta-green-100) 0%, var(--augusta-green-200) 100%);
+}
+
+.rough-gradient {
+  background: linear-gradient(135deg, var(--augusta-green-200) 0%, var(--augusta-green-300) 100%);
+}
+
+.green-gradient {
+  background: linear-gradient(135deg, var(--augusta-green-50) 0%, var(--augusta-green-100) 100%);
+}
+
+.sand-gradient {
+  background: linear-gradient(135deg, #fff8dc 0%, #f5deb3 100%);
+}
+
+/* Tournament-style typography */
+.tournament-title {
+  font-family: var(--font-playfair);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--augusta-green-700) 0%, var(--augusta-green-500) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.masters-accent {
+  color: var(--masters-gold-600);
+  font-weight: 600;
+}
+
+/* Subtle golf ball texture pattern */
+.golf-texture {
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(27, 94, 32, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgba(27, 94, 32, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 40% 40%, rgba(27, 94, 32, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px, 30px 30px, 25px 25px;
+  background-position: 0 0, 10px 10px, 5px 5px;
+}

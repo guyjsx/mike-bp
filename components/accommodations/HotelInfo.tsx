@@ -1,4 +1,5 @@
-import { Card, CardContent, Typography, Box, Grid, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import { Card, CardContent, Typography, Box, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import { LocationOn, Phone, Map, AccessTime, Info, Pool, FitnessCenter, Restaurant, Casino } from '@mui/icons-material'
 
 export default function HotelInfo() {
@@ -32,7 +33,7 @@ export default function HotelInfo() {
           </Box>
 
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
                 <AccessTime sx={{ fontSize: 18 }} />
                 Check-in/Check-out
@@ -47,7 +48,7 @@ export default function HotelInfo() {
               </Box>
             </Grid>
             
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
                 Contact
               </Typography>
@@ -136,25 +137,25 @@ export default function HotelInfo() {
               Amenities
             </Typography>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Pool sx={{ fontSize: 18, color: 'primary.main' }} />
                   <Typography variant="body2">Pool & Spa</Typography>
                 </Box>
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <FitnessCenter sx={{ fontSize: 18, color: 'primary.main' }} />
                   <Typography variant="body2">Fitness Center</Typography>
                 </Box>
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Restaurant sx={{ fontSize: 18, color: 'primary.main' }} />
                   <Typography variant="body2">Multiple Restaurants</Typography>
                 </Box>
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Casino sx={{ fontSize: 18, color: 'primary.main' }} />
                   <Typography variant="body2">Casino</Typography>

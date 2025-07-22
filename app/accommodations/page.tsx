@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Room, Attendee } from '@/lib/types'
 import RoomGrid from '@/components/accommodations/RoomGrid'
@@ -44,7 +44,7 @@ export default function AccommodationsPage() {
         // Handle parsing error
       }
     }
-  }, [])
+  }, [supabase])
 
   if (loading) {
     return (
