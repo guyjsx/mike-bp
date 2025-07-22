@@ -20,9 +20,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  // Debug logging
-  console.log('Current state:', { password, loading, passwordLength: password.length, buttonDisabled: loading || !password.trim() })
-
   const isButtonDisabled = loading || password.trim().length === 0
 
   const handleLogin = async () => {
@@ -30,18 +27,13 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      console.log('Making login request with password:', password)
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
       })
 
-      console.log('Response status:', response.status)
-      console.log('Response ok:', response.ok)
-
       const data = await response.json()
-      console.log('Response data:', data)
 
       if (!response.ok) {
         setError(data.error || 'Invalid password')
@@ -49,15 +41,14 @@ export default function LoginPage() {
       }
 
       if (data.role === 'attendee') {
-        console.log('Redirecting to attendee selection')
         router.push('/select-attendee')
       } else {
-        console.log('Redirecting to dashboard')
         router.push('/dashboard')
       }
     } catch (err) {
       console.error('Login error:', err)
-      setError(`An error occurred: ${err.message}`)
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
+      setError(`An error occurred: ${errorMessage}`)
     } finally {
       setLoading(false)
     }
@@ -115,10 +106,7 @@ export default function LoginPage() {
               label="Password"
               variant="outlined"
               value={password}
-              onChange={(e) => {
-                console.log('Password changed:', e.target.value)
-                setPassword(e.target.value)
-              }}
+              onChange={(e) => setPassword(e.target.value)}
               sx={{ mb: 3 }}
               disabled={loading}
               autoFocus

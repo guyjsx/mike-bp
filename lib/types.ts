@@ -87,6 +87,55 @@ export interface Announcement {
   created_at: string;
 }
 
+export interface GolfCourse {
+  id: string;
+  name: string;
+  address?: string;
+  phone?: string;
+  par_total: number;
+  yardage_total: number;
+  created_at: string;
+}
+
+export interface GolfHole {
+  id: string;
+  course_id: string;
+  hole_number: number;
+  par: number;
+  handicap: number;
+  yardage_fuzzy?: number;
+  yardage_white?: number;
+  yardage_gray?: number;
+  yardage_red?: number;
+  created_at: string;
+}
+
+export interface GolfScorecard {
+  id: string;
+  round_id: string;
+  attendee_id: string;
+  course_id: string;
+  tee_selection: 'fuzzy' | 'white' | 'gray' | 'red';
+  is_completed: boolean;
+  total_score?: number;
+  total_putts?: number;
+  started_at?: string;
+  completed_at?: string;
+  created_at: string;
+}
+
+export interface GolfHoleScore {
+  id: string;
+  scorecard_id: string;
+  hole_id: string;
+  strokes?: number;
+  putts?: number;
+  notes?: string;
+  photo_url?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Settings {
   eventTitle: string;
   eventDates: {
